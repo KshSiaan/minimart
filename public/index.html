@@ -237,8 +237,7 @@
       </div>
       <div class="flex items-center gap-3 shrink-0">
         <span id="stLat" class="hidden sm:inline text-white/55">latency —</span>
-        <a href="/api/openapi"
-          onclick="event.preventDefault();openDoc('https://minimart-ay1v.onrender.com/api/openapi')"
+        <a href="/openapi" onclick="event.preventDefault();openDoc('https://minimart-ay1v.onrender.com/api/openapi')"
           class="bg-[#FF6082] hover:bg-[#ff4a6e] transition-colors text-white font-bold px-3 py-1 rounded-full text-[11.5px] flex items-center gap-1.5"><span
             class="w-1.5 h-1.5 rounded-full bg-white blink"></span> OPENAPI</a>
       </div>
@@ -272,10 +271,10 @@
         <button onclick="copyText(API_BASE,this)"
           class="hidden sm:flex items-center gap-2 fm text-[12.5px] font-bold border-2 border-[#1B1033] rounded-full px-3.5 py-2 bg-white hover:bg-[#FFE4F6] transition-colors"><i
             data-lucide="braces" class="w-4 h-4 text-[#705EFF]"></i> /api</button>
-        <button onclick="openDoc(ORIGIN+'/api/openapi')"
+        <button onclick="openDoc(ORIGIN+'/openapi')"
           class="flex items-center gap-2 text-[13.5px] font-bold bg-[#705EFF] hover:bg-[#5d4cf0] transition-colors text-white border-2 border-[#1B1033] hss rounded-full px-4 py-2"><i
             data-lucide="book-open" class="w-4 h-4"></i> Docs<span class="hidden sm:inline"> ·
-            /api/openapi</span></button>
+            /openapi</span></button>
         <button id="mobBtn"
           class="lg:hidden w-10 h-10 grid place-items-center border-2 border-[#1B1033] rounded-xl bg-white"><i
             data-lucide="menu" class="w-5 h-5"></i></button>
@@ -328,7 +327,7 @@
         <p class="mt-6 text-[16px] sm:text-[17.5px] leading-relaxed text-black/70 max-w-[560px]">
           Every route is namespaced under <b class="fm text-black">/api</b> — right now that's the <b>products</b>
           resource. Docs render from the live spec at
-          <b class="fm text-black">/api/openapi</b>. No gateway, no version prefix, no guessing.
+          <b class="fm text-black">/openapi</b>. No gateway, no version prefix, no guessing.
         </p>
 
         <!-- origin console -->
@@ -363,7 +362,7 @@
               <button onclick="copyText(DOCS_URL,this)"
                 class="group flex items-center gap-2 bg-[#FFF0F5] hover:bg-[#FFE0EB] border border-[#FF6082]/25 rounded-xl px-3 py-2.5 text-left transition-colors">
                 <i data-lucide="file-json" class="w-4 h-4 text-[#FF6082] shrink-0"></i>
-                <span class="min-w-0"><span class="fm text-[12.5px] font-bold block truncate">/api/openapi</span><span
+                <span class="min-w-0"><span class="fm text-[12.5px] font-bold block truncate">/openapi</span><span
                     class="text-[11px] text-black/50 block">scalar docs · live spec</span></span>
                 <i data-lucide="copy"
                   class="w-3.5 h-3.5 ml-auto opacity-40 group-hover:opacity-100 transition-opacity"></i>
@@ -500,7 +499,7 @@
                   data-lucide="info" class="w-4.5 h-4.5"></i></span>
               <p class="text-[13.5px] leading-relaxed"><b>Note:</b> <span class="fm font-bold">GET /api</span> itself
                 returns <span class="fm font-bold">404</span> on purpose — there is no index handler. <span
-                  class="fm font-bold">/api/openapi</span> is the index. Writes are currently <b>unauthenticated</b>, so
+                  class="fm font-bold">/openapi</span> is the index. Writes are currently <b>unauthenticated</b>, so
                 lock them down before launch.</p>
             </div>
           </div>
@@ -733,7 +732,7 @@
         <div class="rv bg-white text-[#1B1033] rounded-[20px] p-4 border-2 border-white">
           <div class="flex items-center gap-2.5"><span
               class="w-8 h-8 rounded-lg bg-[#B26CFF] text-white fd font-bold grid place-items-center text-[14px] border-2 border-[#1B1033]">2</span>
-            <h4 class="fd font-bold text-[15px]">Read /api/openapi</h4>
+            <h4 class="fd font-bold text-[15px]">Read /openapi</h4>
           </div>
           <p class="text-[12.5px] text-black/55 mt-2 leading-relaxed">Scalar UI, generated from the running Elysia app —
             always in sync.</p>
@@ -744,7 +743,7 @@
             <h4 class="fd font-bold text-[15px]">Import into Postman</h4>
           </div>
           <p class="text-[12.5px] text-white/85 mt-2 leading-relaxed">Import URL <span
-              class="fm font-bold text-white break-all">…/api/openapi/json</span> and keep it auto-refreshed.</p>
+              class="fm font-bold text-white break-all">…/openapi/json</span> and keep it auto-refreshed.</p>
         </div>
       </div>
 
@@ -805,7 +804,7 @@
                 <option value="/api/products/"></option>
                 <option value="/api/products/waterpot"></option>
                 <option value="/api/products?q=stainless"></option>
-                <option value="/api/openapi/json"></option>
+                <option value="/openapi/json"></option>
                 <option value="/api/products"></option>
                 <option value="/api"></option>
               </datalist>
@@ -961,7 +960,7 @@
             <button onclick="openDoc(DOCS_URL)"
               class="flex items-center justify-center gap-2 bg-[#FF6082] hover:bg-[#ff4a6e] transition-all hover:-translate-y-0.5 text-white font-bold border-2 border-[#1B1033] rounded-2xl px-7 py-4 text-[15px]"
               style="box-shadow:5px 5px 0 #1B1033"><i data-lucide="book-open-text" class="w-5 h-5"></i>
-              /api/openapi</button>
+              /openapi</button>
             <button onclick="copyText(API_BASE,this)"
               class="flex items-center justify-center gap-2 bg-white hover:bg-[#FFE4F6] transition-all hover:-translate-y-0.5 text-[#1B1033] font-bold border-2 border-[#1B1033] rounded-2xl px-7 py-4 text-[15px]"
               style="box-shadow:5px 5px 0 #1B1033"><i data-lucide="copy" class="w-5 h-5 text-[#705EFF]"></i> Copy /api
@@ -991,7 +990,7 @@
         <p class="text-white/45 text-[13.5px] mt-3 leading-relaxed max-w-[320px]">Elysia-on-Bun product backend,
           deployed on Render. Everything under <button onclick="openDoc(API_BASE)"
             class="fm text-[#B26CFF] hover:underline">/api</button>, docs at <button onclick="openDoc(DOCS_URL)"
-            class="fm text-[#FF9DB2] hover:underline">/api/openapi</button>.</p>
+            class="fm text-[#FF9DB2] hover:underline">/openapi</button>.</p>
         <div
           class="mt-4 inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 fm text-[11.5px] max-w-full">
           <i data-lucide="globe" class="w-4 h-4 text-[#B26CFF] shrink-0"></i><span
@@ -1041,7 +1040,7 @@
             class="originShort">minimart-ay1v.onrender.com</span></span>
         <span class="flex items-center gap-4"><button onclick="openDoc(API_BASE)"
             class="hover:text-white">/api</button><button onclick="openDoc(DOCS_URL)"
-            class="hover:text-white">/api/openapi</button><span id="footLat">latency —</span></span>
+            class="hover:text-white">/openapi</button><span id="footLat">latency —</span></span>
       </div>
     </div>
   </footer>
@@ -1135,12 +1134,12 @@
       {
         m: 'DOCS', p: '/api/openapi', op: 'swaggerUI', d: 'Scalar documentation UI, served by the app itself. Try-it console included.',
         params: [], body: null, res: { note: 'HTML — Scalar UI', openapi: '3.1.2', title: 'Elysia Documentation', version: '0.0.0' },
-        try: { m: 'GET', path: '/api/openapi' }
+        try: { m: 'GET', path: '/openapi' }
       },
       {
-        m: 'DOCS', p: '/api/openapi/json', op: 'swaggerJSON', d: 'The raw OpenAPI 3.1.2 document. Feed it to Postman, generators, or your type client.',
+        m: 'DOCS', p: '/openapi/json', op: 'swaggerJSON', d: 'The raw OpenAPI 3.1.2 document. Feed it to Postman, generators, or your type client.',
         params: [], body: null, res: { openapi: '3.1.2', info: { title: 'Elysia Documentation', version: '0.0.0' }, paths: ['/api/products/', '/api/products/{slug}', '/api/products/{id}'] },
-        try: { m: 'GET', path: '/api/openapi/json' }
+        try: { m: 'GET', path: '/openapi/json' }
       },
     ];
     let sel = 0, mFilter = 'ALL', dTab = 'res';
@@ -1313,7 +1312,7 @@ r = s.<span class="tok-b">post</span>(<span class="tok-s">f"{API}/products"</spa
 
     /* ═══════ MARQUEE ═══════ */
     (function () {
-      const it = ['GET /api/products/', 'POST /api/products/', 'GET /api/products/{slug}', 'PATCH /api/products/{id}', 'DELETE /api/products/{id}', 'DOCS /api/openapi', 'OPENAPI 3.1.2', 'ELYSIA · BUN · RENDER', 'CURRENCY BDT'];
+      const it = ['GET /api/products/', 'POST /api/products/', 'GET /api/products/{slug}', 'PATCH /api/products/{id}', 'DELETE /api/products/{id}', 'DOCS /openapi', 'OPENAPI 3.1.2', 'ELYSIA · BUN · RENDER', 'CURRENCY BDT'];
       const h = it.map(t => `<span class="flex items-center gap-7"><span>${t}</span><span class="w-1.5 h-1.5 rounded-full bg-[#FF6082] inline-block"></span></span>`).join('');
       document.getElementById('mqA').innerHTML = h; document.getElementById('mqB').innerHTML = h;
     })();
@@ -1405,7 +1404,7 @@ r = s.<span class="tok-b">post</span>(<span class="tok-s">f"{API}/products"</spa
       ['GET', '/api/products/?limit=5', '#705EFF'],
       ['GET', '/api/products/waterpot', '#705EFF'],
       ['GET', '/api/products?q=stainless', '#705EFF'],
-      ['GET', '/api/openapi/json', '#0EA5E9'],
+      ['GET', '/openapi/json', '#0EA5E9'],
       ['POST', '/api/products/', '#FF6082'],
       ['DELETE', '/api/products/REPLACE_WITH_ID', '#1B1033'],
     ];
