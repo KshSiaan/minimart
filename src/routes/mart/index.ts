@@ -2,7 +2,7 @@ import { Elysia, t } from 'elysia'
 import { mart, SearchOpts } from './service'
 import * as MartModel from './model'
 
-export const martRoute = new Elysia({ prefix: '/products' })
+export const martRoute = new Elysia({ prefix: '/api/products' })
     .get(
         '/',
         {
