@@ -1,0 +1,1533 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MiniMart Backend · Elysia API — live at /api</title>
+  <meta name="description"
+    content="Backend landing page for minimart-ay1v.onrender.com — all endpoints under /api, OpenAPI docs at /api/openapi." />
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23705EFF'/><path d='M22 38h56l-6 40H28z' fill='%23FFE4F6'/><circle cx='38' cy='28' r='9' fill='%23FF6082'/><circle cx='62' cy='28' r='9' fill='%23B26CFF'/></svg>">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --coral: #FF6082;
+      --blush: #FFE4F6;
+      --violet: #B26CFF;
+      --indigo: #705EFF;
+      --ink: #1B1033;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'IBM Plex Sans', sans-serif;
+      background: #FFF9FC;
+      color: var(--ink);
+    }
+
+    .fd {
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    .fm {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .hs {
+      box-shadow: 6px 6px 0 var(--ink);
+    }
+
+    .hss {
+      box-shadow: 4px 4px 0 var(--ink);
+    }
+
+    .hsl {
+      box-shadow: 10px 10px 0 var(--ink);
+    }
+
+    .dots {
+      background-image: url("data:image/svg+xml,%3Csvg width='26' height='26' viewBox='0 0 26 26' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1.5' fill='%231B1033' fill-opacity='0.13'/%3E%3C/svg%3E");
+    }
+
+    .dots-l {
+      background-image: url("data:image/svg+xml,%3Csvg width='26' height='26' viewBox='0 0 26 26' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1.5' fill='white' fill-opacity='0.13'/%3E%3C/svg%3E");
+    }
+
+    .mq {
+      animation: mq 26s linear infinite;
+    }
+
+    @keyframes mq {
+      from {
+        transform: translateX(0)
+      }
+
+      to {
+        transform: translateX(-50%)
+      }
+    }
+
+    .ring::after {
+      content: '';
+      position: absolute;
+      inset: -5px;
+      border-radius: 9999px;
+      border: 2px solid currentColor;
+      opacity: .55;
+      animation: ring 1.9s cubic-bezier(0, 0, .2, 1) infinite;
+    }
+
+    @keyframes ring {
+      0% {
+        transform: scale(.55);
+        opacity: .85
+      }
+
+      100% {
+        transform: scale(1.4);
+        opacity: 0
+      }
+    }
+
+    .blink {
+      animation: blink 1.05s steps(2) infinite;
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0
+      }
+    }
+
+    .rv {
+      opacity: 0;
+      transform: translateY(26px);
+      transition: opacity .7s cubic-bezier(.22, 1, .36, 1), transform .7s cubic-bezier(.22, 1, .36, 1);
+    }
+
+    .rv.on {
+      opacity: 1;
+      transform: none;
+    }
+
+    .row {
+      transition: background .16s ease, transform .16s ease, box-shadow .16s ease;
+    }
+
+    .row.sel {
+      background: var(--ink);
+    }
+
+    .row.sel .pth,
+    .row.sel .sub {
+      color: #fff;
+    }
+
+    .row.sel .sub {
+      color: #C9BBFF;
+    }
+
+    .tb.on {
+      background: var(--ink);
+      color: #fff;
+    }
+
+    .lift {
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+
+    .lift:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 8px 8px 0 var(--ink);
+    }
+
+    .tok-k {
+      color: #B26CFF
+    }
+
+    .tok-s {
+      color: #8EE6A0
+    }
+
+    .tok-n {
+      color: #FFC86B
+    }
+
+    .tok-p {
+      color: #9DA3C7
+    }
+
+    .tok-b {
+      color: #FF6082
+    }
+
+    .tok-c {
+      color: #6B74A8
+    }
+
+    ::selection {
+      background: var(--coral);
+      color: #fff;
+    }
+
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--blush);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--ink);
+      border-radius: 99px;
+      border: 2px solid var(--blush);
+    }
+
+    .sc::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    .sc::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .sc::-webkit-scrollbar-thumb {
+      background: #3A2E67;
+      border: 0;
+    }
+
+    .spin {
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg)
+      }
+    }
+  </style>
+</head>
+
+<body class="antialiased overflow-x-hidden">
+
+  <!-- ══════════ STATUS RAIL ══════════ -->
+  <div class="bg-[#1B1033] text-white text-[12.5px] fm">
+    <div class="max-w-[1280px] mx-auto px-4 sm:px-6 py-2.5 flex items-center gap-4 justify-between">
+      <div class="flex items-center gap-3 min-w-0">
+        <span id="stChip" class="flex items-center gap-2 shrink-0 text-[#8EE6A0]">
+          <span class="w-2 h-2 rounded-full bg-green-400 relative ring"></span>
+          <span id="stText" class="font-bold tracking-wide">CHECKING LIVE BACKEND…</span>
+        </span>
+        <span class="hidden md:inline text-white/25">/</span>
+        <span class="hidden md:inline text-white/55 truncate">Elysia on Bun · Render · cold-start capable</span>
+      </div>
+      <div class="flex items-center gap-3 shrink-0">
+        <span id="stLat" class="hidden sm:inline text-white/55">latency —</span>
+        <a href="/api/openapi"
+          onclick="event.preventDefault();openDoc('https://minimart-ay1v.onrender.com/api/openapi')"
+          class="bg-[#FF6082] hover:bg-[#ff4a6e] transition-colors text-white font-bold px-3 py-1 rounded-full text-[11.5px] flex items-center gap-1.5"><span
+            class="w-1.5 h-1.5 rounded-full bg-white blink"></span> OPENAPI</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ NAV ══════════ -->
+  <header class="sticky top-0 z-50 bg-[#FFF9FC]/88 backdrop-blur-xl border-b-2 border-[#1B1033]">
+    <div class="max-w-[1280px] mx-auto px-4 sm:px-6 h-[70px] flex items-center gap-4 justify-between">
+      <a href="#top" class="flex items-center gap-3 shrink-0">
+        <span class="w-10 h-10 rounded-[14px] bg-[#1B1033] grid place-items-center relative overflow-hidden">
+          <span class="absolute inset-x-0 top-0 h-[9px] bg-[#FF6082]"></span>
+          <span class="absolute inset-x-0 bottom-0 h-[9px] bg-[#705EFF]"></span>
+          <i data-lucide="shopping-basket" class="w-5 h-5 text-[#FFE4F6]"></i>
+        </span>
+        <span class="leading-tight">
+          <span class="fd font-bold text-[19px] tracking-tight block">MiniMart<span class="text-[#FF6082]">.</span><span
+              class="text-[#705EFF]">API</span></span>
+          <span class="fm text-[10.5px] text-black/50 tracking-[0.18em] uppercase block -mt-0.5">backend · elysia
+            0.0.0</span>
+        </span>
+      </a>
+      <nav class="hidden lg:flex items-center gap-0.5 text-[14px] font-medium">
+        <a href="#base" class="px-3.5 py-2 rounded-full hover:bg-[#FFE4F6] transition-colors">Base URLs</a>
+        <a href="#endpoints" class="px-3.5 py-2 rounded-full hover:bg-[#FFE4F6] transition-colors">Endpoints</a>
+        <a href="#catalog" class="px-3.5 py-2 rounded-full hover:bg-[#FFE4F6] transition-colors">Live Catalog</a>
+        <a href="#try" class="px-3.5 py-2 rounded-full hover:bg-[#FFE4F6] transition-colors">Playground</a>
+        <a href="#status" class="px-3.5 py-2 rounded-full hover:bg-[#FFE4F6] transition-colors">Status</a>
+      </nav>
+      <div class="flex items-center gap-2.5">
+        <button onclick="copyText(API_BASE,this)"
+          class="hidden sm:flex items-center gap-2 fm text-[12.5px] font-bold border-2 border-[#1B1033] rounded-full px-3.5 py-2 bg-white hover:bg-[#FFE4F6] transition-colors"><i
+            data-lucide="braces" class="w-4 h-4 text-[#705EFF]"></i> /api</button>
+        <button onclick="openDoc(ORIGIN+'/api/openapi')"
+          class="flex items-center gap-2 text-[13.5px] font-bold bg-[#705EFF] hover:bg-[#5d4cf0] transition-colors text-white border-2 border-[#1B1033] hss rounded-full px-4 py-2"><i
+            data-lucide="book-open" class="w-4 h-4"></i> Docs<span class="hidden sm:inline"> ·
+            /api/openapi</span></button>
+        <button id="mobBtn"
+          class="lg:hidden w-10 h-10 grid place-items-center border-2 border-[#1B1033] rounded-xl bg-white"><i
+            data-lucide="menu" class="w-5 h-5"></i></button>
+      </div>
+    </div>
+    <div id="mobMenu"
+      class="hidden lg:hidden border-t-2 border-[#1B1033] bg-white px-6 py-4 flex-col gap-1 font-medium">
+      <a href="#base" class="py-2.5 border-b border-black/10">Base URLs</a>
+      <a href="#endpoints" class="py-2.5 border-b border-black/10">Endpoints</a>
+      <a href="#catalog" class="py-2.5 border-b border-black/10">Live Catalog</a>
+      <a href="#try" class="py-2.5 border-b border-black/10">Playground</a>
+      <a href="#status" class="py-2.5">Status</a>
+    </div>
+  </header>
+
+  <!-- ══════════ HERO ══════════ -->
+  <section id="top" class="relative border-b-2 border-[#1B1033] overflow-hidden bg-[#FFE4F6]">
+    <div class="absolute inset-0 dots opacity-70 pointer-events-none"></div>
+    <div
+      class="pointer-events-none absolute -left-28 -top-28 w-[440px] h-[440px] rounded-full bg-[#FF6082]/25 blur-3xl">
+    </div>
+    <div
+      class="pointer-events-none absolute -right-28 top-16 w-[520px] h-[520px] rounded-full bg-[#705EFF]/20 blur-3xl">
+    </div>
+
+    <div
+      class="relative max-w-[1280px] mx-auto px-4 sm:px-6 pt-11 pb-12 lg:pt-16 lg:pb-16 grid lg:grid-cols-[1.08fr_.92fr] gap-9 lg:gap-12 items-start">
+      <!-- copy -->
+      <div>
+        <div class="flex flex-wrap items-center gap-2 mb-6">
+          <span
+            class="fm text-[11.5px] font-bold bg-[#1B1033] text-white px-3 py-1.5 rounded-full flex items-center gap-2"><span
+              class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span> DEPLOYED · RENDER</span>
+          <span class="fm text-[11.5px] font-bold bg-white border-2 border-[#1B1033] px-3 py-1 rounded-full">OpenAPI
+            3.1.2</span>
+          <span class="fm text-[11.5px] font-bold bg-[#B26CFF] text-white px-3 py-1.5 rounded-full">products ·
+            CRUD</span>
+        </div>
+
+        <h1 class="fd font-bold tracking-[-0.03em] leading-[0.94] text-[46px] sm:text-[62px] lg:text-[72px]">
+          The MiniMart<br>
+          backend answers<br>
+          at <span
+            class="relative inline-block bg-[#1B1033] text-white px-4 pb-1.5 rounded-[18px] rotate-[-1.2deg]"><span
+              class="fm text-[36px] sm:text-[48px] lg:text-[56px]">/api</span><span
+              class="absolute -right-2 -top-2 w-4 h-4 rounded-full bg-[#FF6082] border-2 border-[#FFE4F6]"></span></span><span
+            class="text-[#FF6082]">.</span>
+        </h1>
+
+        <p class="mt-6 text-[16px] sm:text-[17.5px] leading-relaxed text-black/70 max-w-[560px]">
+          Every route is namespaced under <b class="fm text-black">/api</b> — right now that's the <b>products</b>
+          resource. Docs render from the live spec at
+          <b class="fm text-black">/api/openapi</b>. No gateway, no version prefix, no guessing.
+        </p>
+
+        <!-- origin console -->
+        <div class="mt-7 bg-white border-2 border-[#1B1033] rounded-[22px] hs overflow-hidden max-w-[620px]">
+          <div class="px-4 py-2.5 bg-[#1B1033] text-white flex items-center justify-between gap-3">
+            <span class="fm text-[10.5px] uppercase tracking-[0.2em] text-white/60 flex items-center gap-2"><i
+                data-lucide="globe" class="w-3.5 h-3.5 text-[#B26CFF]"></i> Web service url</span>
+            <span id="okChip"
+              class="fm text-[10.5px] font-bold bg-white/10 text-white/60 rounded-full px-2.5 py-0.5">probing…</span>
+          </div>
+          <div class="p-3.5 sm:p-4">
+            <div class="flex flex-col sm:flex-row gap-2.5">
+              <div
+                class="flex-1 flex items-center gap-2.5 bg-[#FFF9FC] border-2 border-[#1B1033]/12 rounded-xl px-3.5 py-3 min-w-0">
+                <i data-lucide="lock" class="w-4 h-4 text-[#705EFF] shrink-0"></i>
+                <span id="originOut"
+                  class="fm text-[13.5px] sm:text-[15px] font-bold truncate">https://minimart-ay1v.onrender.com</span>
+              </div>
+              <button onclick="copyText(ORIGIN,this)"
+                class="shrink-0 flex items-center justify-center gap-2 bg-[#FF6082] hover:bg-[#ff4a6e] text-white font-bold text-[14px] border-2 border-[#1B1033] rounded-xl px-5 transition-colors lift"
+                style="box-shadow:4px 4px 0 #1B1033"><i data-lucide="copy" class="w-4 h-4"></i> Copy</button>
+            </div>
+            <div class="mt-2.5 grid sm:grid-cols-2 gap-2.5">
+              <button onclick="copyText(API_BASE,this)"
+                class="group flex items-center gap-2 bg-[#EDE8FF] hover:bg-[#E0D6FF] border border-[#705EFF]/25 rounded-xl px-3 py-2.5 text-left transition-colors">
+                <i data-lucide="server" class="w-4 h-4 text-[#705EFF] shrink-0"></i>
+                <span class="min-w-0"><span class="fm text-[12.5px] font-bold block truncate">/api</span><span
+                    class="text-[11px] text-black/50 block">all endpoints hang off this</span></span>
+                <i data-lucide="copy"
+                  class="w-3.5 h-3.5 ml-auto opacity-40 group-hover:opacity-100 transition-opacity"></i>
+              </button>
+              <button onclick="copyText(DOCS_URL,this)"
+                class="group flex items-center gap-2 bg-[#FFF0F5] hover:bg-[#FFE0EB] border border-[#FF6082]/25 rounded-xl px-3 py-2.5 text-left transition-colors">
+                <i data-lucide="file-json" class="w-4 h-4 text-[#FF6082] shrink-0"></i>
+                <span class="min-w-0"><span class="fm text-[12.5px] font-bold block truncate">/api/openapi</span><span
+                    class="text-[11px] text-black/50 block">scalar docs · live spec</span></span>
+                <i data-lucide="copy"
+                  class="w-3.5 h-3.5 ml-auto opacity-40 group-hover:opacity-100 transition-opacity"></i>
+              </button>
+            </div>
+            <div class="mt-2.5 flex flex-wrap items-center gap-2">
+              <button onclick="openDoc(API_BASE)"
+                class="fm text-[11.5px] font-bold bg-[#1B1033] text-white rounded-lg px-3 py-2 hover:bg-black transition-colors flex items-center gap-1.5"><i
+                  data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i> HIT /api</button>
+              <button onclick="openDoc(SPEC_URL)"
+                class="fm text-[11.5px] font-bold border-2 border-[#1B1033] rounded-lg px-3 py-2 hover:bg-[#FFE4F6] transition-colors flex items-center gap-1.5"><i
+                  data-lucide="download" class="w-3.5 h-3.5"></i> openapi.json</button>
+              <button onclick="wakeUp(this)" id="wakeBtn"
+                class="fm text-[11.5px] font-bold bg-[#705EFF] text-white rounded-lg px-3 py-2 hover:bg-[#5d4cf0] transition-colors flex items-center gap-1.5"><i
+                  data-lucide="zap" class="w-3.5 h-3.5"></i> WAKE THE SERVER</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6 flex flex-col sm:flex-row gap-3 max-w-[620px]">
+          <button onclick="openDoc(DOCS_URL)"
+            class="flex-1 flex items-center justify-center gap-2 bg-[#1B1033] hover:bg-black transition-all hover:-translate-y-0.5 text-white font-bold border-2 border-[#1B1033] hs rounded-2xl px-6 py-4 text-[15px]">
+            <i data-lucide="book-open-text" class="w-5 h-5 text-[#B26CFF]"></i> Open the docs <i
+              data-lucide="arrow-up-right" class="w-4 h-4 opacity-50"></i>
+          </button>
+          <a href="#endpoints"
+            class="flex-1 flex items-center justify-center gap-2 bg-white hover:bg-[#FFE4F6] transition-all hover:-translate-y-0.5 font-bold border-2 border-[#1B1033] hs rounded-2xl px-6 py-4 text-[15px]">
+            <i data-lucide="list-tree" class="w-5 h-5 text-[#FF6082]"></i> Read the route map
+          </a>
+        </div>
+        <p class="mt-4 fm text-[12px] text-black/50 flex items-start gap-2 max-w-[620px] leading-relaxed"><i
+            data-lucide="alert-triangle" class="w-4 h-4 text-[#FF6082] shrink-0 mt-0.5"></i> Render free-tier spins down
+          when idle — the first request after a sleep can take 30–60s. Use <b class="text-black/70">Wake the server</b>
+          before demoing.</p>
+      </div>
+
+      <!-- live response panel -->
+      <div class="relative">
+        <div class="absolute -inset-2.5 bg-[#B26CFF] rounded-[26px] border-2 border-[#1B1033] rotate-[1.6deg]"></div>
+        <div class="absolute -inset-2.5 bg-[#FF6082] rounded-[26px] border-2 border-[#1B1033] rotate-[-1.2deg]"></div>
+        <div class="relative bg-[#1B1033] rounded-[22px] border-2 border-[#1B1033] overflow-hidden text-white hsl">
+          <div class="flex items-center justify-between px-4 sm:px-5 py-3 border-b border-white/10 bg-[#221740]">
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-[#FF6082]"></span><span
+                class="w-3 h-3 rounded-full bg-[#FFC86B]"></span><span class="w-3 h-3 rounded-full bg-green-400"></span>
+              <span class="ml-2 fm text-[11.5px] text-white/55">GET /api/products/?limit=1</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span id="heroMs" class="fm text-[10.5px] bg-white/10 rounded-md px-2 py-1 text-white/60">— ms</span>
+              <button onclick="liveProbe(true)" id="probeBtn"
+                class="w-7 h-7 grid place-items-center rounded-md bg-white/10 hover:bg-[#FF6082] transition-colors"><i
+                  data-lucide="refresh-cw" class="w-3.5 h-3.5"></i></button>
+            </div>
+          </div>
+          <div class="px-4 sm:px-5 py-4 fm text-[12.5px] leading-[1.8] code-scroll sc overflow-x-auto min-h-[290px]">
+            <div class="text-white/35">$ curl <span id="heroCmd"
+                class="text-[#8EE6A0] break-all">https://minimart-ay1v.onrender.com/api/products/?limit=1</span></div>
+            <pre id="heroOut"
+              class="mt-3 whitespace-pre-wrap break-words"><span class="text-white/40">connecting…</span><span class="blink text-[#B26CFF]">▊</span></pre>
+          </div>
+          <div
+            class="px-4 sm:px-5 py-3 bg-[#100A22] border-t border-white/10 flex items-center justify-between fm text-[11px] text-white/45">
+            <span class="flex items-center gap-2"><i data-lucide="database" class="w-3.5 h-3.5 text-[#B26CFF]"></i>
+              total products: <b id="heroTotal" class="text-white/80">—</b></span>
+            <span class="flex items-center gap-1.5"><span
+                class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span> application/json</span>
+          </div>
+        </div>
+        <div
+          class="absolute -left-2 sm:-left-5 -bottom-6 bg-white border-2 border-[#1B1033] hss rounded-2xl px-4 py-2.5 flex items-center gap-2.5 rotate-[-2deg]">
+          <span class="w-9 h-9 rounded-xl bg-[#FF6082] grid place-items-center text-white"><i data-lucide="badge-check"
+              class="w-5 h-5"></i></span>
+          <span><span class="fd font-bold text-[13px] block leading-none">BDT pricing</span><span
+              class="fm text-[10.5px] text-black/50">integer minor-ish units · price: 850</span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="relative max-w-[1280px] mx-auto px-4 sm:px-6 pb-10 grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <div class="bg-white border-2 border-[#1B1033] rounded-[18px] hss p-4 sm:p-5">
+        <div class="fm text-[10.5px] uppercase tracking-[0.16em] text-black/45 flex items-center gap-1.5"><i
+            data-lucide="route" class="w-3.5 h-3.5 text-[#705EFF]"></i> Live routes</div>
+        <div class="fd font-bold text-[28px] sm:text-[34px] mt-1">5 <span
+            class="text-[13px] fm font-semibold text-black/40">+ docs</span></div>
+      </div>
+      <div class="bg-[#1B1033] text-white border-2 border-[#1B1033] rounded-[18px] p-4 sm:p-5"
+        style="box-shadow:4px 4px 0 #B26CFF">
+        <div class="fm text-[10.5px] uppercase tracking-[0.16em] text-white/45 flex items-center gap-1.5"><i
+            data-lucide="package" class="w-3.5 h-3.5 text-[#B26CFF]"></i> Products in DB</div>
+        <div class="fd font-bold text-[28px] sm:text-[34px] mt-1" id="statCount">1</div>
+      </div>
+      <div class="bg-white border-2 border-[#1B1033] rounded-[18px] hss p-4 sm:p-5">
+        <div class="fm text-[10.5px] uppercase tracking-[0.16em] text-black/45 flex items-center gap-1.5"><i
+            data-lucide="timer" class="w-3.5 h-3.5 text-[#FF6082]"></i> Warm latency</div>
+        <div class="fd font-bold text-[28px] sm:text-[34px] mt-1"><span id="statLat">—</span><span
+            class="text-[14px] text-black/40">ms</span></div>
+      </div>
+      <div class="bg-[#FF6082] text-white border-2 border-[#1B1033] rounded-[18px] hss p-4 sm:p-5">
+        <div class="fm text-[10.5px] uppercase tracking-[0.16em] text-white/75 flex items-center gap-1.5"><i
+            data-lucide="file-code-2" class="w-3.5 h-3.5"></i> Spec</div>
+        <div class="fd font-bold text-[28px] sm:text-[34px] mt-1">3.1.2</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ MARQUEE ══════════ -->
+  <div class="bg-[#1B1033] text-white border-b-2 border-[#1B1033] overflow-hidden py-3 select-none">
+    <div class="mq flex whitespace-nowrap fm text-[12.5px] font-bold tracking-[0.18em] w-max">
+      <div class="flex items-center gap-7 pr-7" id="mqA"></div>
+      <div class="flex items-center gap-7 pr-7" id="mqB"></div>
+    </div>
+  </div>
+
+  <!-- ══════════ BASE URLS ══════════ -->
+  <section id="base" class="py-14 lg:py-20 bg-[#FFF9FC]">
+    <div class="max-w-[1280px] mx-auto px-4 sm:px-6">
+      <div class="grid lg:grid-cols-[1fr_360px] gap-5 items-start">
+        <!-- ledger -->
+        <div class="rv">
+          <p class="fm text-[11.5px] font-bold uppercase tracking-[0.22em] text-[#FF6082] flex items-center gap-2"><span
+              class="w-8 h-[3px] bg-[#FF6082] rounded-full"></span> 01 — surfaces</p>
+          <h2 class="fd font-bold tracking-[-0.025em] text-[32px] sm:text-[44px] leading-[1.03] mt-2">Four URLs you<br
+              class="lg:hidden"> ever need.</h2>
+          <div class="mt-6 bg-white border-2 border-[#1B1033] rounded-[24px] hs overflow-hidden">
+            <div
+              class="hidden sm:grid grid-cols-[112px_1fr_180px_118px] gap-3 px-5 py-3 bg-[#FFE4F6] border-b-2 border-[#1B1033] fm text-[10.5px] uppercase tracking-[0.16em] font-bold text-black/55">
+              <span>verb</span><span>url</span><span>what it returns</span><span class="text-right">action</span>
+            </div>
+            <div id="urlLedger" class="divide-y divide-[#1B1033]/10"></div>
+            <div
+              class="px-5 py-4 bg-[#FFF3D6] border-t-2 border-[#1B1033] flex flex-col sm:flex-row gap-3 sm:items-center">
+              <span
+                class="w-9 h-9 shrink-0 rounded-xl bg-[#FFC86B] border-2 border-[#1B1033] grid place-items-center"><i
+                  data-lucide="info" class="w-4.5 h-4.5"></i></span>
+              <p class="text-[13.5px] leading-relaxed"><b>Note:</b> <span class="fm font-bold">GET /api</span> itself
+                returns <span class="fm font-bold">404</span> on purpose — there is no index handler. <span
+                  class="fm font-bold">/api/openapi</span> is the index. Writes are currently <b>unauthenticated</b>, so
+                lock them down before launch.</p>
+            </div>
+          </div>
+        </div>
+        <!-- right rail -->
+        <div class="flex flex-col gap-4">
+          <div class="rv bg-[#705EFF] text-white border-2 border-[#1B1033] rounded-[24px] hss p-5 sm:p-6">
+            <div class="flex items-center gap-2.5"><span
+                class="w-10 h-10 rounded-xl bg-white/15 border border-white/25 grid place-items-center"><i
+                  data-lucide="shield-off" class="w-5 h-5"></i></span>
+              <h3 class="fd font-bold text-[18px]">Auth</h3>
+            </div>
+            <p class="text-[13.5px] leading-relaxed text-white/80 mt-3">No <span
+                class="fm text-white">securitySchemes</span> in the spec — every route including <span
+                class="fm text-white">POST/PATCH/DELETE /api/products</span> is open.</p>
+            <button onclick="copyWriteCurl(this)"
+              class="mt-3.5 w-full fm text-[11.5px] font-bold bg-white text-[#1B1033] rounded-xl py-2.5 hover:bg-[#FFE4F6] transition-colors">COPY
+              RAW WRITE CALL</button>
+          </div>
+          <div class="rv bg-white border-2 border-[#1B1033] rounded-[24px] hss p-5 sm:p-6">
+            <div class="flex items-center gap-2.5"><span
+                class="w-10 h-10 rounded-xl bg-[#FFE4F6] border-2 border-[#1B1033] grid place-items-center"><i
+                  data-lucide="sliders-horizontal" class="w-5 h-5 text-[#FF6082]"></i></span>
+              <h3 class="fd font-bold text-[18px]">Query knobs</h3>
+            </div>
+            <div class="mt-3.5 flex flex-col gap-2 fm text-[12px]">
+              <div class="flex items-center justify-between bg-[#FFF9FC] border border-black/10 rounded-xl px-3 py-2.5">
+                <span class="font-bold">?q=</span><span class="text-black/50">keywords → name · sku · slug · desc</span>
+              </div>
+              <div class="flex items-center justify-between bg-[#FFF9FC] border border-black/10 rounded-xl px-3 py-2.5">
+                <span class="font-bold">?limit=</span><span class="text-black/50">1–100 · default 20</span>
+              </div>
+              <div class="flex items-center justify-between bg-[#FFF9FC] border border-black/10 rounded-xl px-3 py-2.5">
+                <span class="font-bold">?offset=</span><span class="text-black/50">≥ 0 · default 0</span>
+              </div>
+            </div>
+          </div>
+          <div class="rv bg-[#1B1033] text-white rounded-[24px] border-2 border-[#1B1033] p-5 sm:p-6"
+            style="box-shadow:4px 4px 0 #FF6082">
+            <div class="flex items-center gap-2.5"><span
+                class="w-10 h-10 rounded-xl bg-[#FF6082] grid place-items-center"><i data-lucide="snowflake"
+                  class="w-5 h-5"></i></span>
+              <h3 class="fd font-bold text-[18px]">Cold start</h3>
+            </div>
+            <p class="text-[13.5px] leading-relaxed text-white/60 mt-3">Idle Render services sleep. Warm-up pattern:
+              ping <span class="fm text-[#8EE6A0]">/api/products/?limit=1</span> and retry until 200.</p>
+            <div id="wakeLog"
+              class="mt-3 fm text-[11.5px] bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-white/50">no
+              probe run yet</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ ENDPOINTS ══════════ -->
+  <section id="endpoints" class="py-14 lg:py-20 bg-white border-y-2 border-[#1B1033] relative overflow-hidden">
+    <div class="absolute inset-0 dots opacity-40 pointer-events-none"></div>
+    <div class="relative max-w-[1280px] mx-auto px-4 sm:px-6">
+      <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-5 mb-7">
+        <div class="rv">
+          <p class="fm text-[11.5px] font-bold uppercase tracking-[0.22em] text-[#705EFF] flex items-center gap-2"><span
+              class="w-8 h-[3px] bg-[#705EFF] rounded-full"></span> 02 — contract</p>
+          <h2 class="fd font-bold tracking-[-0.025em] text-[32px] sm:text-[44px] leading-[1.03] mt-2">Every route, as
+            the<br class="hidden sm:block"> spec declares it<span class="text-[#FF6082]">.</span></h2>
+        </div>
+        <div class="rv flex flex-wrap items-center gap-2.5">
+          <div class="relative">
+            <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-black/40"></i>
+            <input id="q" oninput="renderList()" placeholder="filter routes…"
+              class="w-[220px] fm text-[13px] border-2 border-[#1B1033] rounded-full pl-10 pr-3.5 py-2.5 bg-[#FFF9FC] outline-none focus:bg-[#FFE4F6] placeholder:text-black/35">
+          </div>
+          <div class="flex gap-1.5" id="mfilters"></div>
+        </div>
+      </div>
+
+      <div class="grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] gap-5 items-start">
+        <div id="list"
+          class="rv bg-[#FFF9FC] border-2 border-[#1B1033] rounded-[24px] hs overflow-hidden divide-y-2 divide-[#1B1033]/10">
+        </div>
+
+        <div
+          class="rv lg:sticky lg:top-[92px] bg-[#1B1033] text-white rounded-[24px] border-2 border-[#1B1033] overflow-hidden"
+          style="box-shadow:6px 6px 0 #B26CFF">
+          <div class="px-5 py-4 border-b border-white/10 flex items-center gap-3 flex-wrap">
+            <span id="dM" class="fm text-[11.5px] font-bold rounded-lg px-2.5 py-1.5">GET</span>
+            <span id="dP" class="fm text-[14.5px] font-bold break-all">/api/products/</span>
+            <span id="dOp" class="ml-auto fm text-[10.5px] text-white/40">operationId: getApiProducts</span>
+          </div>
+          <div class="px-5 py-4">
+            <div class="flex gap-1.5 mb-3.5" id="dTabs"></div>
+            <p id="dDesc" class="text-[13.5px] text-white/60 leading-relaxed">List products with pagination and keyword
+              search.</p>
+
+            <div id="pane-req" class="hidden mt-3.5">
+              <div class="fm text-[10.5px] uppercase tracking-[0.16em] text-white/35 mb-2">parameters</div>
+              <div id="dParams" class="flex flex-col gap-1.5"></div>
+              <div class="fm text-[10.5px] uppercase tracking-[0.16em] text-white/35 mt-4 mb-2">request body</div>
+              <div
+                class="bg-black/40 border border-white/10 rounded-xl p-3.5 fm text-[12px] leading-relaxed overflow-x-auto sc">
+                <pre id="dBody"></pre>
+              </div>
+            </div>
+
+            <div id="pane-res">
+              <div class="flex items-center justify-between mb-2">
+                <span class="fm text-[10.5px] uppercase tracking-[0.16em] text-white/35">200 response · real
+                  payload</span>
+                <div class="flex gap-2">
+                  <button onclick="copySample(this)"
+                    class="fm text-[10.5px] font-bold bg-white/10 hover:bg-white/20 border border-white/10 rounded-lg px-2.5 py-1 transition-colors flex items-center gap-1"><i
+                      data-lucide="copy" class="w-3 h-3"></i> sample</button>
+                  <button onclick="copyCurl(this)"
+                    class="fm text-[10.5px] font-bold bg-[#B26CFF] hover:bg-[#a259ff] rounded-lg px-2.5 py-1 transition-colors flex items-center gap-1"><i
+                      data-lucide="terminal" class="w-3 h-3"></i> cURL</button>
+                </div>
+              </div>
+              <div
+                class="bg-black/50 border border-white/10 rounded-2xl p-4 fm text-[12px] leading-[1.75] overflow-x-auto sc">
+                <pre id="dJson"></pre>
+              </div>
+            </div>
+
+            <div id="pane-try" class="hidden mt-3">
+              <div class="fm text-[10.5px] uppercase tracking-[0.16em] text-white/35 mb-2">run it against the live
+                service</div>
+              <button onclick="sendFromDetail()"
+                class="w-full flex items-center justify-center gap-2 bg-[#FF6082] hover:bg-[#ff4a6e] transition-colors rounded-xl py-3.5 font-bold text-[14px]"><i
+                  data-lucide="play" class="w-4 h-4"></i> Execute request</button>
+              <div
+                class="mt-2.5 bg-black/50 border border-white/10 rounded-2xl p-3.5 fm text-[11.5px] min-h-[110px] overflow-auto sc">
+                <pre id="dTryOut" class="text-white/40">// press Execute to hit the live API…</pre>
+              </div>
+            </div>
+
+            <a id="dDocs" href="#"
+              class="mt-4 flex items-center justify-center gap-2 border-2 border-white/20 hover:bg-white/10 transition-colors rounded-xl py-3 font-bold text-[13.5px]"><i
+                data-lucide="book-open" class="w-4 h-4 text-[#B26CFF]"></i> Open this in Scalar docs</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ LIVE CATALOG ══════════ -->
+  <section id="catalog" class="py-14 lg:py-20 bg-[#FFE4F6] border-b-2 border-[#1B1033] relative overflow-hidden">
+    <div class="absolute inset-0 dots opacity-60 pointer-events-none"></div>
+    <div class="relative max-w-[1280px] mx-auto px-4 sm:px-6">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-7">
+        <div class="rv">
+          <p class="fm text-[11.5px] font-bold uppercase tracking-[0.22em] text-[#B26CFF] flex items-center gap-2"><span
+              class="w-8 h-[3px] bg-[#B26CFF] rounded-full"></span> 03 — proof</p>
+          <h2 class="fd font-bold tracking-[-0.025em] text-[32px] sm:text-[44px] leading-[1.03] mt-2">This table is the
+            API<span class="text-[#FF6082]">.</span></h2>
+          <p class="text-[14.5px] text-black/60 mt-2.5 max-w-[520px]">Not mockup data — rows are fetched live from <span
+              class="fm font-bold">GET /api/products/</span>. Search hits the real <span class="fm font-bold">?q=</span>
+            filter.</p>
+        </div>
+        <div class="rv flex flex-col sm:flex-row gap-2.5">
+          <div class="relative">
+            <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-black/40"></i>
+            <input id="catQ" onkeydown="if(event.key==='Enter')loadCatalog()" placeholder="search sku / name…  ↵"
+              class="w-full sm:w-[240px] fm text-[13px] border-2 border-[#1B1033] rounded-full pl-10 pr-3.5 py-3 bg-white outline-none focus:bg-[#FFF9FC] placeholder:text-black/35">
+          </div>
+          <button onclick="loadCatalog()"
+            class="flex items-center justify-center gap-2 bg-[#1B1033] hover:bg-black text-white fm text-[12.5px] font-bold rounded-full px-5 py-3 transition-colors"><i
+              data-lucide="refresh-ccw" class="w-4 h-4"></i> REFETCH</button>
+        </div>
+      </div>
+
+      <div class="rv bg-white border-2 border-[#1B1033] rounded-[24px] hs overflow-hidden">
+        <div class="px-5 py-3 bg-[#1B1033] text-white flex items-center gap-3 flex-wrap">
+          <span id="catMode"
+            class="fm text-[11px] font-bold bg-white/10 rounded-full px-3 py-1 flex items-center gap-1.5"><span
+              class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span> live</span>
+          <span class="fm text-[11.5px] text-white/50 flex-1 min-w-0 truncate" id="catUrl"></span>
+          <span class="fm text-[11px] text-white/50" id="catMeta">—</span>
+        </div>
+        <div class="overflow-x-auto sc">
+          <table class="w-full min-w-[760px] text-left">
+            <thead>
+              <tr
+                class="bg-[#FFE4F6] border-b-2 border-[#1B1033] fm text-[10.5px] uppercase tracking-[0.14em] text-black/55">
+                <th class="px-5 py-3 font-bold">id</th>
+                <th class="px-3 py-3 font-bold">slug</th>
+                <th class="px-3 py-3 font-bold">sku</th>
+                <th class="px-3 py-3 font-bold">name</th>
+                <th class="px-3 py-3 font-bold text-right">price</th>
+                <th class="px-3 py-3 font-bold text-center">stock</th>
+                <th class="px-3 py-3 font-bold text-center">active</th>
+                <th class="px-5 py-3 font-bold text-right">links</th>
+              </tr>
+            </thead>
+            <tbody id="catBody" class="divide-y divide-[#1B1033]/8"></tbody>
+          </table>
+        </div>
+        <div
+          class="px-5 py-3.5 border-t-2 border-[#1B1033] bg-[#FFF9FC] flex items-center justify-between gap-3 flex-wrap fm text-[11.5px] text-black/50">
+          <span id="catFoot">—</span>
+          <button onclick="copyText(JSON.stringify(window.__cat??{},null,2),this)"
+            class="font-bold border-2 border-[#1B1033] rounded-lg px-3 py-1.5 bg-white hover:bg-[#FFE4F6] transition-colors flex items-center gap-1.5"><i
+              data-lucide="braces" class="w-3.5 h-3.5"></i> copy raw json</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ QUICKSTART ══════════ -->
+  <section class="py-14 lg:py-20 bg-[#1B1033] text-white relative overflow-hidden border-b-2 border-[#1B1033]">
+    <div class="absolute inset-0 dots-l opacity-50 pointer-events-none"></div>
+    <div
+      class="pointer-events-none absolute -top-36 -right-24 w-[460px] h-[460px] rounded-full bg-[#705EFF]/30 blur-3xl">
+    </div>
+    <div class="relative max-w-[1280px] mx-auto px-4 sm:px-6 grid lg:grid-cols-[300px_minmax(0,1fr)] gap-5 items-start">
+      <div class="flex flex-col gap-3.5">
+        <div class="rv">
+          <p class="fm text-[11.5px] font-bold uppercase tracking-[0.22em] text-[#B26CFF] flex items-center gap-2"><span
+              class="w-8 h-[3px] bg-[#B26CFF] rounded-full"></span> 04 — quickstart</p>
+          <h2 class="fd font-bold tracking-[-0.025em] text-[30px] sm:text-[38px] leading-[1.04] mt-2">
+            Paste.<br>Run.<br>Ship.</h2>
+        </div>
+        <div class="rv bg-white text-[#1B1033] rounded-[20px] p-4 border-2 border-white">
+          <div class="flex items-center gap-2.5"><span
+              class="w-8 h-8 rounded-lg bg-[#FF6082] text-white fd font-bold grid place-items-center text-[14px] border-2 border-[#1B1033]">1</span>
+            <h4 class="fd font-bold text-[15px]">Point at /api</h4>
+          </div>
+          <p class="text-[12.5px] text-black/55 mt-2 leading-relaxed">Base URL is your origin + <span
+              class="fm font-bold">/api</span>. No keys needed today.</p>
+        </div>
+        <div class="rv bg-white text-[#1B1033] rounded-[20px] p-4 border-2 border-white">
+          <div class="flex items-center gap-2.5"><span
+              class="w-8 h-8 rounded-lg bg-[#B26CFF] text-white fd font-bold grid place-items-center text-[14px] border-2 border-[#1B1033]">2</span>
+            <h4 class="fd font-bold text-[15px]">Read /api/openapi</h4>
+          </div>
+          <p class="text-[12.5px] text-black/55 mt-2 leading-relaxed">Scalar UI, generated from the running Elysia app —
+            always in sync.</p>
+        </div>
+        <div class="rv bg-[#FF6082] rounded-[20px] p-4 border-2 border-[#1B1033]" style="box-shadow:4px 4px 0 #1B1033">
+          <div class="flex items-center gap-2.5"><span
+              class="w-8 h-8 rounded-lg bg-white fd font-bold grid place-items-center text-[14px] border-2 border-[#1B1033]">3</span>
+            <h4 class="fd font-bold text-[15px]">Import into Postman</h4>
+          </div>
+          <p class="text-[12.5px] text-white/85 mt-2 leading-relaxed">Import URL <span
+              class="fm font-bold text-white break-all">…/api/openapi/json</span> and keep it auto-refreshed.</p>
+        </div>
+      </div>
+
+      <div class="rv bg-[#0F0A22] rounded-[24px] border border-white/10 overflow-hidden flex flex-col">
+        <div class="flex items-center justify-between gap-3 px-4 py-3 border-b border-white/10 flex-wrap">
+          <div class="flex gap-1.5" id="langTabs"></div>
+          <div class="flex items-center gap-2">
+            <span id="langFile" class="fm text-[11.5px] text-white/45">request.sh</span>
+            <button onclick="copyLang(this)"
+              class="fm text-[11px] font-bold bg-white/10 hover:bg-[#FF6082] border border-white/10 rounded-lg px-3 py-1.5 transition-colors flex items-center gap-1.5"><i
+                data-lucide="copy" class="w-3.5 h-3.5"></i> Copy</button>
+          </div>
+        </div>
+        <div class="p-5 sm:p-7 fm text-[12.5px] sm:text-[13.5px] leading-[1.95] overflow-x-auto sc">
+          <pre id="code" class="whitespace-pre"></pre>
+        </div>
+        <div class="px-5 py-3.5 border-t border-white/10 flex items-center gap-2.5 flex-wrap">
+          <button onclick="openDoc(ORIGIN+'/api/products/waterpot')"
+            class="fm text-[11.5px] font-bold bg-green-400/15 text-green-300 border border-green-400/25 rounded-lg px-3 py-2 hover:bg-green-400/25 transition-colors">▶
+            GET /api/products/waterpot</button>
+          <button onclick="copyText(SPEC_URL,this)"
+            class="fm text-[11.5px] font-bold bg-white/5 text-white/70 border border-white/10 rounded-lg px-3 py-2 hover:bg-white/10 transition-colors">openapi.json</button>
+          <span class="fm text-[11px] text-white/30 ml-auto hidden sm:inline">price · stock = integers · currency
+            default BDT</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ PLAYGROUND ══════════ -->
+  <section id="try" class="py-14 lg:py-20 bg-[#FFF9FC]">
+    <div class="max-w-[1280px] mx-auto px-4 sm:px-6">
+      <div class="grid lg:grid-cols-[minmax(0,1fr)_320px] gap-5 items-start">
+        <div class="rv">
+          <p class="fm text-[11.5px] font-bold uppercase tracking-[0.22em] text-[#705EFF] flex items-center gap-2"><span
+              class="w-8 h-[3px] bg-[#705EFF] rounded-full"></span> 05 — playground</p>
+          <h2 class="fd font-bold tracking-[-0.025em] text-[32px] sm:text-[44px] leading-[1.03] mt-2">Real
+            fetch.<br>Real payload.<span class="text-[#FF6082]"> No sandbox.</span></h2>
+          <p class="text-[14.5px] text-black/60 mt-2.5 max-w-[560px]">This sends an actual request to <span
+              class="fm font-bold">minimart-ay1v.onrender.com</span>. Writes mutate live data — pick <span
+              class="fm font-bold">GET</span> if you're just looking.</p>
+
+          <div class="mt-6 bg-white border-2 border-[#1B1033] rounded-[24px] hs overflow-hidden">
+            <div class="bg-[#1B1033] px-4 py-3.5 flex items-center gap-2.5 flex-wrap">
+              <select id="pgM"
+                class="fm text-[12.5px] font-bold rounded-lg px-2.5 py-2.5 outline-none cursor-pointer bg-[#FF6082] text-white border-0">
+                <option>GET</option>
+                <option>POST</option>
+                <option>PATCH</option>
+                <option>DELETE</option>
+              </select>
+              <span id="pgO"
+                class="fm text-[12px] text-white/35 truncate hidden md:inline">https://minimart-ay1v.onrender.com</span>
+              <input id="pgP" list="pgPaths" oninput="pgPreset()" value="/api/products/?limit=5" spellcheck="false"
+                class="flex-1 min-w-[190px] bg-white/10 text-white fm text-[12.5px] font-bold rounded-lg px-3 py-2.5 outline-none border border-white/15 focus:bg-white/15 placeholder:text-white/30" />
+              <datalist id="pgPaths">
+                <option value="/api/products/?limit=5"></option>
+                <option value="/api/products/"></option>
+                <option value="/api/products/waterpot"></option>
+                <option value="/api/products?q=stainless"></option>
+                <option value="/api/openapi/json"></option>
+                <option value="/api/products"></option>
+                <option value="/api"></option>
+              </datalist>
+              <button id="pgGo" onclick="pgSend()"
+                class="flex items-center gap-2 bg-[#705EFF] hover:bg-[#5d4cf0] transition-colors text-white font-bold text-[13.5px] rounded-lg px-5 py-2.5"><i
+                  data-lucide="send" class="w-4 h-4"></i> Send</button>
+            </div>
+            <div class="grid sm:grid-cols-[minmax(0,.85fr)_minmax(0,1.15fr)]">
+              <div class="p-4 sm:p-5 border-b-2 sm:border-b-0 sm:border-r-2 border-[#1B1033]/10">
+                <div class="fm text-[10.5px] uppercase tracking-[0.16em] text-black/40 font-bold mb-2">body · json</div>
+                <textarea id="pgB" spellcheck="false"
+                  class="w-full h-[240px] fm text-[12px] leading-[1.7] bg-[#1B1033] text-[#D8CCFF] rounded-2xl p-4 outline-none resize-none sc"></textarea>
+                <div class="mt-2.5 flex items-center gap-2 flex-wrap fm text-[11px]">
+                  <span class="bg-[#FFE4F6] border border-black/10 rounded px-1.5 py-0.5 font-bold">content-type:
+                    application/json</span>
+                  <button onclick="pgSample('create')" class="font-bold text-[#705EFF] hover:underline ml-auto">create
+                    sample</button>
+                </div>
+              </div>
+              <div class="p-4 sm:p-5 bg-[#FFF9FC]">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="fm text-[10.5px] uppercase tracking-[0.16em] text-black/40 font-bold">response</span>
+                  <span id="pgS"
+                    class="fm text-[11px] font-bold bg-black/5 border border-black/10 rounded-full px-3 py-1">idle</span>
+                </div>
+                <div class="h-[240px] bg-[#1B1033] rounded-2xl p-4 fm text-[12px] leading-[1.75] overflow-auto sc">
+                  <pre id="pgR" class="text-white/40">// press Send…</pre>
+                </div>
+                <div class="mt-2.5 flex items-center justify-between fm text-[11px] text-black/45">
+                  <span id="pgMeta">— ms · — bytes</span>
+                  <button onclick="copyResp()"
+                    class="font-bold text-[#705EFF] hover:underline flex items-center gap-1">copy body <i
+                      data-lucide="copy" class="w-3 h-3"></i></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- presets rail -->
+        <div class="flex flex-col gap-3.5">
+          <div class="rv bg-white border-2 border-[#1B1033] rounded-[22px] hss p-5">
+            <h3 class="fd font-bold text-[16px] flex items-center gap-2"><i data-lucide="zap"
+                class="w-4 h-4 text-[#FF6082]"></i> One-click calls</h3>
+            <div id="presetBox" class="mt-3.5 flex flex-col gap-2"></div>
+          </div>
+          <div class="rv bg-[#FF6082] text-white border-2 border-[#1B1033] rounded-[22px] hss p-5">
+            <h3 class="fd font-bold text-[16px] flex items-center gap-2"><i data-lucide="traffic-cone"
+                class="w-5 h-5"></i> If it hangs</h3>
+            <ul class="mt-3 text-[13px] text-white/90 leading-relaxed flex flex-col gap-2">
+              <li class="flex gap-2"><i data-lucide="snowflake" class="w-4 h-4 shrink-0 mt-0.5"></i> 30–60s silence =
+                cold container. Send again after it wakes.</li>
+              <li class="flex gap-2"><i data-lucide="globe-2" class="w-4 h-4 shrink-0 mt-0.5"></i> CORS error while
+                previewing locally? Open the URL in a new tab instead.</li>
+              <li class="flex gap-2"><i data-lucide="hash" class="w-4 h-4 shrink-0 mt-0.5"></i> PATCH/DELETE want the
+                <b>id</b>, not the slug.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ STATUS ══════════ -->
+  <section id="status" class="py-14 lg:py-20 bg-[#FFE4F6] border-t-2 border-[#1B1033]">
+    <div class="max-w-[1280px] mx-auto px-4 sm:px-6">
+      <div class="rv bg-white border-2 border-[#1B1033] rounded-[24px] hs overflow-hidden">
+        <div
+          class="px-5 sm:px-7 py-5 flex flex-col lg:flex-row lg:items-center gap-4 border-b-2 border-[#1B1033] bg-[#FFF9FC]">
+          <div class="flex items-center gap-3">
+            <span
+              class="w-11 h-11 rounded-2xl bg-[#705EFF] border-2 border-[#1B1033] grid place-items-center text-white"><i
+                data-lucide="activity" class="w-6 h-6"></i></span>
+            <div>
+              <div class="flex items-center gap-2 flex-wrap">
+                <h2 class="fd font-bold text-[22px] leading-none">Measured, not claimed</h2>
+                <span id="uptimeChip"
+                  class="fm text-[10.5px] font-bold bg-[#EDE8FF] text-[#705EFF] border border-[#705EFF]/30 rounded-full px-2.5 py-0.5">0
+                  samples</span>
+              </div>
+              <p class="fm text-[11.5px] text-black/45 mt-1.5">latency logged by this page, every 15s, against <span
+                  class="font-bold">/api/products/?limit=1</span></p>
+            </div>
+          </div>
+          <div class="lg:ml-auto flex gap-2.5">
+            <button onclick="probeAll(true)"
+              class="flex items-center gap-2 bg-[#1B1033] text-white text-[13px] font-bold rounded-xl px-5 py-3 hover:bg-black transition-colors"><i
+                data-lucide="radar" class="w-4 h-4"></i> Probe now</button>
+            <button id="autoBtn" onclick="toggleAuto(this)"
+              class="flex items-center gap-2 bg-white text-[13px] font-bold rounded-xl px-5 py-3 border-2 border-[#1B1033] hover:bg-[#FFE4F6] transition-colors"><i
+                data-lucide="pause" class="w-4 h-4"></i> <span>Auto: on</span></button>
+          </div>
+        </div>
+        <div class="grid lg:grid-cols-[minmax(0,1fr)_340px]">
+          <div class="p-5 sm:p-7">
+            <div class="bg-[#1B1033] rounded-[20px] p-4 sm:p-5">
+              <div class="flex items-center justify-between mb-3 fm text-[10.5px] uppercase tracking-[0.16em]">
+                <span class="text-white/40">round-trip ms</span>
+                <span class="flex gap-3"><span class="text-[#B26CFF]">● samples</span><span class="text-[#FF6082]">●
+                    cold start</span></span>
+              </div>
+              <div class="h-[190px]"><canvas id="chart"></canvas></div>
+            </div>
+            <div class="mt-4 grid grid-cols-3 gap-2.5">
+              <div class="bg-[#FFF9FC] border-2 border-[#1B1033]/10 rounded-xl py-2.5 text-center fm">
+                <div class="text-[10px] uppercase tracking-[0.14em] text-black/40">best</div>
+                <div class="font-bold text-[15px] text-green-600" id="mMin">—</div>
+              </div>
+              <div class="bg-[#FFF9FC] border-2 border-[#1B1033]/10 rounded-xl py-2.5 text-center fm">
+                <div class="text-[10px] uppercase tracking-[0.14em] text-black/40">median</div>
+                <div class="font-bold text-[15px] text-[#705EFF]" id="mMed">—</div>
+              </div>
+              <div class="bg-[#FFF9FC] border-2 border-[#1B1033]/10 rounded-xl py-2.5 text-center fm">
+                <div class="text-[10px] uppercase tracking-[0.14em] text-black/40">worst</div>
+                <div class="font-bold text-[15px] text-[#FF6082]" id="mMax">—</div>
+              </div>
+            </div>
+          </div>
+          <div class="border-t-2 lg:border-t-0 lg:border-l-2 border-[#1B1033] bg-[#FFF9FC] p-5 sm:p-7">
+            <span class="fm text-[10.5px] uppercase tracking-[0.16em] text-black/40 font-bold">Components</span>
+            <div id="svcs" class="mt-3 flex flex-col gap-2"></div>
+            <div class="mt-4 bg-[#1B1033] text-white rounded-[18px] p-4">
+              <div class="fm text-[10.5px] uppercase tracking-[0.16em] text-white/40">last probe</div>
+              <div id="lastProbe" class="fm text-[12px] text-[#8EE6A0] mt-1.5 leading-relaxed break-all">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ CTA ══════════ -->
+  <section class="px-4 sm:px-6 py-14 lg:py-20 bg-[#FFF9FC]">
+    <div
+      class="rv max-w-[1280px] mx-auto bg-[#705EFF] border-2 border-[#1B1033] rounded-[30px] hsl overflow-hidden relative">
+      <div class="absolute inset-0 dots-l opacity-60 pointer-events-none"></div>
+      <div
+        class="pointer-events-none absolute -top-24 -right-16 w-[380px] h-[380px] rounded-full bg-[#B26CFF]/50 blur-3xl">
+      </div>
+      <div
+        class="pointer-events-none absolute -bottom-28 -left-20 w-[400px] h-[400px] rounded-full bg-[#FF6082]/40 blur-3xl">
+      </div>
+      <div class="relative px-6 sm:px-11 py-12 sm:py-14 grid lg:grid-cols-[1.05fr_.95fr] gap-10 items-center">
+        <div class="text-white">
+          <span
+            class="fm text-[11.5px] font-bold bg-[#1B1033] rounded-full px-4 py-2 inline-flex items-center gap-2"><span
+              class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span> LIVE · MINIMART-AY1V.ONRENDER.COM</span>
+          <h2 class="fd font-bold tracking-[-0.03em] text-[34px] sm:text-[52px] leading-[1] mt-5">Your frontend<br>is
+            one<br><span class="fm bg-[#1B1033] px-3 pb-1.5 rounded-[14px] text-[30px] sm:text-[42px]">fetch()</span>
+            away.</h2>
+          <div class="mt-6 flex flex-col sm:flex-row gap-3">
+            <button onclick="openDoc(DOCS_URL)"
+              class="flex items-center justify-center gap-2 bg-[#FF6082] hover:bg-[#ff4a6e] transition-all hover:-translate-y-0.5 text-white font-bold border-2 border-[#1B1033] rounded-2xl px-7 py-4 text-[15px]"
+              style="box-shadow:5px 5px 0 #1B1033"><i data-lucide="book-open-text" class="w-5 h-5"></i>
+              /api/openapi</button>
+            <button onclick="copyText(API_BASE,this)"
+              class="flex items-center justify-center gap-2 bg-white hover:bg-[#FFE4F6] transition-all hover:-translate-y-0.5 text-[#1B1033] font-bold border-2 border-[#1B1033] rounded-2xl px-7 py-4 text-[15px]"
+              style="box-shadow:5px 5px 0 #1B1033"><i data-lucide="copy" class="w-5 h-5 text-[#705EFF]"></i> Copy /api
+              base</button>
+          </div>
+        </div>
+        <div class="bg-[#1B1033] rounded-[24px] p-5 sm:p-6 text-white" style="box-shadow:6px 6px 0 rgba(0,0,0,.3)">
+          <div class="fm text-[10.5px] tracking-[0.2em] uppercase text-white/35 mb-3.5">route map · 5 operations</div>
+          <div id="routeMap" class="flex flex-col gap-2 fm text-[12.5px]"></div>
+          <p class="mt-4 fm text-[11px] text-white/35 leading-relaxed">GET/PATCH/DELETE errors surface as Elysia problem
+            responses; check <span class="text-white/60">response.status</span> before parsing.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ FOOTER ══════════ -->
+  <footer class="bg-[#1B1033] text-white border-t-2 border-[#1B1033]">
+    <div class="max-w-[1280px] mx-auto px-4 sm:px-6 py-12 grid md:grid-cols-[1.3fr_1fr_1fr_1fr] gap-8">
+      <div>
+        <div class="flex items-center gap-3">
+          <span class="w-10 h-10 rounded-[13px] bg-[#FF6082] grid place-items-center"><i data-lucide="shopping-basket"
+              class="w-5 h-5"></i></span>
+          <span class="fd font-bold text-[19px]">MiniMart<span class="text-[#FF6082]">.</span><span
+              class="text-[#B26CFF]">API</span></span>
+        </div>
+        <p class="text-white/45 text-[13.5px] mt-3 leading-relaxed max-w-[320px]">Elysia-on-Bun product backend,
+          deployed on Render. Everything under <button onclick="openDoc(API_BASE)"
+            class="fm text-[#B26CFF] hover:underline">/api</button>, docs at <button onclick="openDoc(DOCS_URL)"
+            class="fm text-[#FF9DB2] hover:underline">/api/openapi</button>.</p>
+        <div
+          class="mt-4 inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 fm text-[11.5px] max-w-full">
+          <i data-lucide="globe" class="w-4 h-4 text-[#B26CFF] shrink-0"></i><span
+            class="truncate originOut2">https://minimart-ay1v.onrender.com</span>
+          <button onclick="copyText(ORIGIN,this)" class="text-white/40 hover:text-white transition-colors shrink-0"><i
+              data-lucide="copy" class="w-3.5 h-3.5"></i></button>
+        </div>
+      </div>
+      <div>
+        <div class="fm text-[10.5px] tracking-[0.2em] uppercase text-white/30 font-bold mb-4">Products</div>
+        <div class="flex flex-col gap-2.5 text-[13.5px] text-white/65">
+          <button onclick="openDoc(API_BASE+'/products/')"
+            class="hover:text-white transition-colors w-fit text-left">GET /api/products/</button>
+          <button onclick="openDoc(API_BASE+'/products/')"
+            class="hover:text-white transition-colors w-fit text-left">POST /api/products/</button>
+          <button onclick="openDoc(API_BASE+'/products/waterpot')"
+            class="hover:text-white transition-colors w-fit text-left">GET /api/products/{slug}</button>
+          <button onclick="openDoc(API_BASE+'/products/')"
+            class="hover:text-white transition-colors w-fit text-left">PATCH · DELETE /{id}</button>
+        </div>
+      </div>
+      <div>
+        <div class="fm text-[10.5px] tracking-[0.2em] uppercase text-white/30 font-bold mb-4">Docs</div>
+        <div class="flex flex-col gap-2.5 text-[13.5px] text-white/65">
+          <button onclick="openDoc(DOCS_URL)" class="hover:text-white transition-colors w-fit text-left">Scalar
+            UI</button>
+          <button onclick="openDoc(SPEC_URL)"
+            class="hover:text-white transition-colors w-fit text-left">openapi.json</button>
+          <a href="#try" class="hover:text-white transition-colors w-fit">Playground</a>
+          <a href="#catalog" class="hover:text-white transition-colors w-fit">Live catalog</a>
+        </div>
+      </div>
+      <div>
+        <div class="fm text-[10.5px] tracking-[0.2em] uppercase text-white/30 font-bold mb-4">Ops</div>
+        <div class="flex flex-col gap-2.5 text-[13.5px] text-white/65">
+          <a href="#status" class="hover:text-white transition-colors w-fit">Measured latency</a>
+          <button onclick="wakeUp()" class="hover:text-white transition-colors w-fit text-left">Wake service</button>
+          <span class="flex items-center gap-2 fm text-[11.5px] text-green-300" id="footSt"><span
+              class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span> probing…</span>
+        </div>
+      </div>
+    </div>
+    <div class="border-t border-white/10">
+      <div
+        class="max-w-[1280px] mx-auto px-4 sm:px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-3 fm text-[11.5px] text-white/35">
+        <span>© <span id="yr">2026</span> MiniMart backend · <span
+            class="originShort">minimart-ay1v.onrender.com</span></span>
+        <span class="flex items-center gap-4"><button onclick="openDoc(API_BASE)"
+            class="hover:text-white">/api</button><button onclick="openDoc(DOCS_URL)"
+            class="hover:text-white">/api/openapi</button><span id="footLat">latency —</span></span>
+      </div>
+    </div>
+  </footer>
+
+  <div id="toast"
+    class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] bg-[#1B1033] text-white fm text-[12.5px] font-bold border-2 border-[#1B1033] rounded-full px-5 py-3 hidden items-center gap-2 pointer-events-none"
+    style="box-shadow:4px 4px 0 #FF6082">
+    <i data-lucide="check-circle-2" class="w-4 h-4 text-green-400"></i><span id="toastMsg">Copied</span>
+  </div>
+
+  <script>
+    /* ═══════ ORIGIN ═══════ */
+    const SAME = location.hostname === 'minimart-ay1v.onrender.com';
+    const ORIGIN = SAME ? location.origin : 'https://minimart-ay1v.onrender.com';
+    const API_BASE = ORIGIN + '/api';
+    const DOCS_URL = API_BASE + '/openapi';
+    const SPEC_URL = API_BASE + '/openapi/json';
+    const PING = API_BASE + '/products/?limit=1';
+
+    /* ═══════ tiny helpers ═══════ */
+    let tT, tt = document.getElementById('toast');
+    function toast(m) { document.getElementById('toastMsg').textContent = m; tt.classList.remove('hidden'); tt.classList.add('flex'); clearTimeout(tT); tT = setTimeout(() => { tt.classList.add('hidden'); tt.classList.remove('flex') }, 2400); }
+    async function copyText(t, btn) {
+      t = String(t).trim();
+      try { await navigator.clipboard.writeText(t); }
+      catch (e) { const a = document.createElement('textarea'); a.value = t; document.body.appendChild(a); a.select(); try { document.execCommand('copy') } catch (_) { } a.remove(); }
+      toast('Copied · ' + (t.length > 46 ? t.slice(0, 46) + '…' : t));
+    }
+    function openDoc(u) { const w = window.open(u, '_blank', 'noopener'); if (!w) toast('Popup blocked — allow it'); }
+    function hl(s) {
+      return s.replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/"([^"]+)"(\s*:)/g, (m, k, c) => `<span class="tok-b">"${k}"</span><span class="tok-p">${c}</span>`)
+        .replace(/: "([^"\n]*)"/g, (m, v) => `: <span class="tok-s">"${v}"</span>`)
+        .replace(/\b(-?\d+\.?\d*)\b/g, '<span class="tok-n">$1</span>')
+        .replace(/\b(true|false|null)\b/g, '<span class="tok-k">$1</span>');
+    }
+    const MS = { GET: 'background:#705EFF;color:#fff', POST: 'background:#FF6082;color:#fff', PATCH: 'background:#B26CFF;color:#fff', DELETE: 'background:#1B1033;color:#fff', DOCS: 'background:#0EA5E9;color:#fff' };
+    const badge = m => `<span class="fm text-[11px] font-bold rounded-lg px-2.5 py-1 shrink-0" style="${MS[m] || MS.GET}">${m}</span>`;
+
+    /* ═══════ URL LEDGER ═══════ */
+    const LEDGER = [
+      { tag: 'ORIGIN', u: () => ORIGIN, c: '#1B1033', n: 'Web service url', d: 'Health of the whole deployment', open: () => ORIGIN + '/api/products/' },
+      { tag: 'PREFIX', u: () => API_BASE, c: '#705EFF', n: 'Api base', d: 'Every endpoint starts here', open: () => API_BASE },
+      { tag: 'DOCS', u: () => DOCS_URL, c: '#FF6082', n: 'Openapi docs', d: 'Scalar UI generated by Elysia', open: () => DOCS_URL },
+      { tag: 'SPEC', u: () => SPEC_URL, c: '#B26CFF', n: 'Raw json schema', d: 'Import into Postman / codegen', open: () => SPEC_URL },
+    ];
+    document.getElementById('urlLedger').innerHTML = LEDGER.map((l, i) => `
+  <div class="row grid sm:grid-cols-[112px_1fr_180px_118px] gap-2 sm:gap-3 px-5 py-4 items-center hover:bg-[#FFE4F6]/70">
+    <span class="fm text-[10.5px] font-bold rounded-md px-2 py-1 w-fit text-white" style="background:${l.c}">${l.tag}</span>
+    <span class="min-w-0"><span class="fm text-[13.5px] font-bold block truncate" data-url="${i}">${l.u()}</span><span class="text-[12.5px] text-black/50 block">${l.n}</span></span>
+    <span class="text-[12.5px] text-black/55 leading-snug">${l.d}</span>
+    <span class="flex gap-1.5 sm:justify-end">
+      <button onclick="copyText(LEDGER[${i}].u(),this)" class="w-9 h-9 grid place-items-center border-2 border-[#1B1033] rounded-lg bg-white hover:bg-[#FFE4F6] transition-colors" title="Copy"><i data-lucide="copy" class="w-3.5 h-3.5"></i></button>
+      <button onclick="openDoc(LEDGER[${i}].open())" class="w-9 h-9 grid place-items-center border-2 border-[#1B1033] rounded-lg bg-[#1B1033] text-white hover:bg-black transition-colors" title="Open"><i data-lucide="external-link" class="w-3.5 h-3.5"></i></button>
+    </span>
+  </div>`).join('');
+
+    /* ═══════ ENDPOINTS (from live openapi.json) ═══════ */
+    const EP = [
+      {
+        m: 'GET', p: '/api/products/', op: 'getApiProducts', d: 'List products. Paginated with limit/offset, keyword-filtered with q. Every q keyword must match name, SKU, slug or description.',
+        params: [['q', 'query', 'string ≤200', '—', 'Space-separated keywords'], ['limit', 'query', 'number 1–100', '20', 'Page size'], ['offset', 'query', 'number ≥0', '0', 'Rows to skip']],
+        body: null,
+        res: { items: [{ id: 'gvo1fsuumttlg06cgcsm356o', slug: 'waterpot', sku: 'wp324uiy3', name: 'Stainless Steel Waterpot', description: 'Durable stainless steel waterpot with a tight-fitting lid…', price: 850, currency: 'BDT', stock: 25, isActive: true, createdAt: '2026-10-29T06:06:25.965Z', updatedAt: '2026-10-29T06:06:25.965Z' }], total: 1, limit: '20', offset: 0 },
+        try: { m: 'GET', path: '/api/products/?limit=5' }
+      },
+      {
+        m: 'POST', p: '/api/products/', op: 'postApiProducts', d: 'Create a product. All eight fields are required — the schema is strict, missing keys are rejected.',
+        params: [], body: { slug: 'ceramic-mug', sku: 'cm0042', name: 'Ceramic Mug', description: 'Matte 350ml ceramic mug, dishwasher safe.', price: 450, currency: 'BDT', stock: 60, isActive: true },
+        res: { id: '<cuid>', slug: 'ceramic-mug', sku: 'cm0042', name: 'Ceramic Mug', price: 450, currency: 'BDT', stock: 60, isActive: true, createdAt: '2026-10-29T12:00:00.000Z' },
+        try: { m: 'POST', path: '/api/products/', body: 'create' }
+      },
+      {
+        m: 'GET', p: '/api/products/{slug}', op: 'getApiProductsBySlug', d: 'Fetch one product by its slug — the friendly, stable lookup used by storefront pages.',
+        params: [['slug', 'path', 'string', 'required', 'Product slug']], body: null,
+        res: { id: 'gvo1fsuumttlg06cgcsm356o', slug: 'waterpot', sku: 'wp324uiy3', name: 'Stainless Steel Waterpot', description: 'Durable stainless steel waterpot with a tight-fitting lid. Rust-resistant, easy to clean, and keeps water fresh for everyday home use.', price: 850, currency: 'BDT', stock: 25, isActive: true },
+        try: { m: 'GET', path: '/api/products/waterpot' }
+      },
+      {
+        m: 'PATCH', p: '/api/products/{id}', op: 'patchApiProductsById', d: 'Partial update by database id (not slug). Send only the fields you want to change.',
+        params: [['id', 'path', 'string', 'required', 'Product id (cuid)']], body: { price: 799, stock: 18, isActive: false },
+        res: { id: 'gvo1fsuumttlg06cgcsm356o', price: 799, stock: 18, isActive: false, updatedAt: '2026-10-29T12:04:11.000Z' },
+        try: { m: 'PATCH', path: '/api/products/REPLACE_WITH_ID', body: 'patch' }
+      },
+      {
+        m: 'DELETE', p: '/api/products/{id}', op: 'deleteApiProductsById', d: 'Delete a product by id. Destructive and currently unauthenticated — double-check the id.',
+        params: [['id', 'path', 'string', 'required', 'Product id (cuid)']], body: null,
+        res: { deleted: true, id: 'gvo1fsuumttlg06cgcsm356o' },
+        try: { m: 'DELETE', path: '/api/products/REPLACE_WITH_ID' }
+      },
+      {
+        m: 'DOCS', p: '/api/openapi', op: 'swaggerUI', d: 'Scalar documentation UI, served by the app itself. Try-it console included.',
+        params: [], body: null, res: { note: 'HTML — Scalar UI', openapi: '3.1.2', title: 'Elysia Documentation', version: '0.0.0' },
+        try: { m: 'GET', path: '/api/openapi' }
+      },
+      {
+        m: 'DOCS', p: '/api/openapi/json', op: 'swaggerJSON', d: 'The raw OpenAPI 3.1.2 document. Feed it to Postman, generators, or your type client.',
+        params: [], body: null, res: { openapi: '3.1.2', info: { title: 'Elysia Documentation', version: '0.0.0' }, paths: ['/api/products/', '/api/products/{slug}', '/api/products/{id}'] },
+        try: { m: 'GET', path: '/api/openapi/json' }
+      },
+    ];
+    let sel = 0, mFilter = 'ALL', dTab = 'res';
+
+    document.getElementById('mfilters').innerHTML = ['ALL', 'GET', 'POST', 'PATCH', 'DELETE', 'DOCS'].map(m =>
+      `<button onclick="setF('${m}',this)" class="mf tb fm text-[11.5px] font-bold border-2 border-[#1B1033] rounded-full px-3.5 py-2.5 ${m === 'ALL' ? 'on' : 'bg-white hover:bg-[#FFE4F6]'}">${m}</button>`).join('');
+    function setF(m, b) { mFilter = m; document.querySelectorAll('.mf').forEach(x => { x.classList.remove('on'); x.classList.add('bg-white') }); b.classList.add('on'); b.classList.remove('bg-white'); renderList(); }
+
+    function renderList() {
+      const q = (document.getElementById('q').value || '').toLowerCase();
+      const f = EP.map((e, i) => ({ e, i })).filter(({ e }) => (mFilter === 'ALL' || e.m === mFilter) && (!q || e.p.toLowerCase().includes(q) || e.d.toLowerCase().includes(q) || e.op.toLowerCase().includes(q)));
+      const L = document.getElementById('list');
+      L.innerHTML = f.length ? f.map(({ e, i }) => `
+    <button onclick="pick(${i})" class="row sel-able ${i === sel ? 'sel' : ''} w-full text-left px-4 sm:px-5 py-4 flex items-center gap-3.5 hover:bg-[#FFE4F6]/70">
+      ${badge(e.m)}
+      <span class="min-w-0 flex-1">
+        <span class="pth fm text-[13.5px] font-bold block truncate ${i === sel ? '' : 'text-[#1B1033]'}">${e.p}</span>
+        <span class="sub block text-[12px] ${i === sel ? 'text-white/60' : 'text-black/45'} truncate mt-0.5">${e.op.replace(/([A-Z])/g, ' $1').toLowerCase()}</span>
+      </span>
+      <span class="hidden sm:block fm text-[10.5px] font-bold ${i === sel ? 'text-[#B26CFF]' : 'text-black/35'}">${e.params.length} params</span>
+    </button>`).join('')
+        : `<div class="p-10 text-center"><div class="w-12 h-12 mx-auto rounded-2xl bg-[#FFE4F6] border-2 border-[#1B1033] grid place-items-center mb-3"><i data-lucide="search-x" class="w-6 h-6"></i></div><p class="fd font-bold">Nothing matches “${q}”</p><p class="text-[13px] text-black/50 mt-1">Try “products”, “slug”, “openapi”.</p></div>`;
+      lucide.createIcons();
+    }
+    document.getElementById('dTabs').innerHTML = [['res', 'Response'], ['req', 'Params & body'], ['try', 'Try it']].map(([k, l]) =>
+      `<button onclick="dTabSet('${k}',this)" class="dt fm text-[11.5px] font-bold rounded-lg px-3.5 py-2 border border-white/15 ${k === 'res' ? 'bg-white text-[#1B1033]' : 'bg-white/5 text-white/60 hover:bg-white/10'}">${l.toUpperCase()}</button>`).join('');
+    function dTabSet(k, b) {
+      dTab = k; document.querySelectorAll('.dt').forEach(x => { x.className = 'dt fm text-[11.5px] font-bold rounded-lg px-3.5 py-2 border border-white/15 bg-white/5 text-white/60 hover:bg-white/10' }); b.classList.add('bg-white', 'text-[#1B1033]');
+      ['res', 'req', 'try'].forEach(p => document.getElementById('pane-' + p).classList.toggle('hidden', p !== k));
+    }
+
+    function pick(i) {
+      sel = i; renderList();
+      const e = EP[i];
+      const m = document.getElementById('dM'); m.textContent = e.m; m.style.cssText = 'font-family:JetBrains Mono,monospace;font-size:11.5px;font-weight:700;border-radius:8px;padding:6px 10px;' + (MS[e.m] || '');
+      document.getElementById('dP').textContent = e.p;
+      document.getElementById('dOp').textContent = 'operationId: ' + e.op;
+      document.getElementById('dDesc').textContent = e.d;
+      document.getElementById('dJson').innerHTML = hl(JSON.stringify(e.res, null, 2));
+      document.getElementById('dDocs').onclick = (ev) => { ev.preventDefault(); openDoc(e.m === 'DOCS' && e.p.includes('json') ? SPEC_URL : DOCS_URL) };
+      const pBox = document.getElementById('dParams');
+      pBox.innerHTML = e.params.length ? e.params.map(([n, inp, t, req, d]) => `
+    <div class="flex flex-wrap items-center gap-2 bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 fm text-[11.5px]">
+      <b class="text-[#8EE6A0]">${n}</b><span class="text-white/35">in:${inp}</span><span class="text-[#B26CFF]">${t}</span>
+      <span class="ml-auto text-white/40">${req === 'required' ? '<b class=text-[#FF6082]>required</b>' : 'default ' + req}</span>
+    </div>
+    <div class="text-[11.5px] text-white/35 px-1 -mt-1 mb-0.5">${d}</div>`).join('')
+        : `<div class="fm text-[11.5px] text-white/35 bg-white/5 border border-white/10 rounded-xl px-3 py-2.5">no parameters</div>`;
+      const bb = document.getElementById('dBody');
+      bb.innerHTML = e.body ? hl(JSON.stringify(e.body, null, 2)) : '<span class="text-white/30">none — GET/DELETE take no body</span>';
+      document.getElementById('dTryOut').innerHTML = '<span class="text-white/40">// press Execute to hit the live API…</span>';
+      dTabSet(dTab, document.querySelectorAll('.dt')[['res', 'req', 'try'].indexOf(dTab)]);
+    }
+    function curSample() { const e = EP[sel]; return e.body ? JSON.stringify(e.body, null, 2) : JSON.stringify(e.res, null, 2); }
+    function copySample(b) { copyText(JSON.stringify(EP[sel].res, null, 2), b) }
+    function copyCurl(b) {
+      const e = EP[sel]; const url = ORIGIN + e.p.replace('{slug}', 'waterpot').replace('{id}', 'REPLACE_WITH_ID');
+      copyText(`curl -X ${e.m === 'DOCS' ? 'GET' : e.m} "${url}"` + (e.body ? ` -H "Content-Type: application/json" -d '${JSON.stringify(e.body)}'` : ''), b)
+    }
+    async function sendFromDetail() {
+      const e = EP[sel], t = e.try, out = document.getElementById('dTryOut');
+      out.innerHTML = '<span class="text-white/40">sending… (cold start can take ~1min)</span>';
+      const r = await rawReq(t.m, t.path, t.body === 'create' ? JSON.stringify(e.body) : t.body === 'patch' ? JSON.stringify(e.body) : '');
+      out.innerHTML = hl(r.text.length > 1600 ? r.text.slice(0, 1600) + '\n…truncated' : r.text);
+    }
+
+    /* ═══════ CORE REQUEST ═══════ */
+    async function rawReq(method, path, body) {
+      const t0 = performance.now();
+      try {
+        const ctl = new AbortController(); const to = setTimeout(() => ctl.abort(), 50000);
+        const o = { method, signal: ctl.signal, headers: { Accept: 'application/json' } };
+        if (body && method !== 'GET' && method !== 'DELETE') { o.headers['Content-Type'] = 'application/json'; o.body = body; }
+        const res = await fetch(ORIGIN + path, o); clearTimeout(to);
+        const txt = await res.text(); const ms = Math.round(performance.now() - t0);
+        let pretty = txt; try { pretty = JSON.stringify(JSON.parse(txt), null, 2) } catch (_) { pretty = txt || '(empty body)'; }
+        return { ok: res.ok, status: res.status, ms, text: pretty, live: true };
+      } catch (err) {
+        const ms = Math.round(performance.now() - t0);
+        return { ok: false, status: 0, ms, text: JSON.stringify({ error: 'network_blocked', detail: 'The browser could not reach the service (CORS, offline, or the container is asleep). Open the URL in a new tab.', url: ORIGIN + path }, null, 2), live: false };
+      }
+    }
+
+    /* ═══════ LANG CODE SAMPLES ═══════ */
+    let lang = 'curl';
+    const LANGS = [['curl', 'cURL', 'request.sh'], ['js', 'fetch', 'client.js'], ['py', 'Python', 'client.py'], ['ts', 'Bun/TS', 'client.ts']];
+    document.getElementById('langTabs').innerHTML = LANGS.map(([k, l], i) => `<button onclick="setLang('${k}',this)" class="lt fm text-[11.5px] font-bold border-2 border-white/15 rounded-lg px-3.5 py-2 ${i === 0 ? 'bg-white text-[#1B1033]' : 'text-white/60 hover:bg-white/10'}">${l}</button>`).join('');
+    function setLang(k, b) { lang = k; document.querySelectorAll('.lt').forEach(x => { x.className = 'lt fm text-[11.5px] font-bold border-2 border-white/15 rounded-lg px-3.5 py-2 text-white/60 hover:bg-white/10' }); b.classList.add('bg-white', 'text-[#1B1033]'); paintCode(); }
+    function paintCode() {
+      const B = API_BASE;
+      const map = {
+        curl: {
+          f: 'request.sh', c:
+            `<span class="tok-p"># ── list products (warm ~40ms · cold up to 60s)</span>
+<span class="tok-k">curl</span> <span class="tok-s">"${B}/products/?limit=20&offset=0"</span>
+
+<span class="tok-p"># ── keyword search → matches name · sku · slug · description</span>
+<span class="tok-k">curl</span> <span class="tok-s">"${B}/products?q=stainless%20steel"</span>
+
+<span class="tok-p"># ── single product by slug</span>
+<span class="tok-k">curl</span> ${B}<span class="tok-b">/products/waterpot</span>
+
+<span class="tok-p"># ── create (all 8 fields required)</span>
+<span class="tok-k">curl</span> -X POST ${B}<span class="tok-b">/products</span> \\
+  -H <span class="tok-s">"Content-Type: application/json"</span> \\
+  -d <span class="tok-s">'{"slug":"ceramic-mug","sku":"cm0042","name":"Ceramic Mug",
+       "description":"Matte 350ml mug","price":450,"currency":"BDT",
+       "stock":60,"isActive":true}'</span>`},
+        js: {
+          f: 'client.js', c:
+            `<span class="tok-k">const</span> API = <span class="tok-s">"${B}"</span>;
+
+<span class="tok-p">// 1 · list with pagination</span>
+<span class="tok-k">async function</span> <span class="tok-b">getProducts</span>({ q = <span class="tok-s">""</span>, limit = <span class="tok-n">20</span>, offset = <span class="tok-n">0</span> } = {}) {
+  <span class="tok-k">const</span> p = <span class="tok-k">new</span> URLSearchParams({ q, limit, offset });
+  <span class="tok-k">const</span> r = <span class="tok-k">await</span> <span class="tok-b">fetch</span>(<span class="tok-s">"${'${API}'}/products/?"</span> + p);
+  <span class="tok-k">if</span> (!r.ok) <span class="tok-k">throw new</span> Error(<span class="tok-s">"api "</span> + r.status);
+  <span class="tok-k">return</span> r.<span class="tok-b">json</span>();  <span class="tok-c">// → { items, total, limit, offset }</span>
+}
+
+<span class="tok-p">// 2 · one product by slug</span>
+<span class="tok-k">const</span> pot = <span class="tok-k">await</span> <span class="tok-b">fetch</span>(<span class="tok-s">"${'${API}'}/products/waterpot"</span>).then(r => r.<span class="tok-b">json</span>());
+
+<span class="tok-p">// 3 · create — no key needed today, but that will change</span>
+<span class="tok-k">await</span> <span class="tok-b">fetch</span>(<span class="tok-s">"${'${API}'}/products"</span>, {
+  method: <span class="tok-s">"POST"</span>,
+  headers: { <span class="tok-s">"Content-Type"</span>: <span class="tok-s">"application/json"</span> },
+  body: JSON.<span class="tok-b">stringify</span>({
+    slug: <span class="tok-s">"ceramic-mug"</span>, sku: <span class="tok-s">"cm0042"</span>, name: <span class="tok-s">"Ceramic Mug"</span>,
+    description: <span class="tok-s">"Matte 350ml mug"</span>, price: <span class="tok-n">450</span>,
+    currency: <span class="tok-s">"BDT"</span>, stock: <span class="tok-n">60</span>, isActive: <span class="tok-k">true</span>,
+  }),
+});`},
+        py: {
+          f: 'client.py', c:
+            `<span class="tok-k">import</span> requests
+
+API = <span class="tok-s">"${B}"</span>
+s = requests.<span class="tok-b">Session</span>()
+s.headers[<span class="tok-s">"Accept"</span>] = <span class="tok-s">"application/json"</span>
+
+<span class="tok-p"># 1 · paginated list (retry once for Render cold start)</span>
+<span class="tok-k">def</span> <span class="tok-b">products</span>(q=<span class="tok-s">""</span>, limit=<span class="tok-n">20</span>, offset=<span class="tok-n">0</span>, tries=<span class="tok-n">2</span>):
+    <span class="tok-k">for</span> _ <span class="tok-k">in</span> <span class="tok-b">range</span>(tries):
+        <span class="tok-k">try</span>:
+            r = s.<span class="tok-b">get</span>(<span class="tok-s">f"{API}/products/"</span>,
+                      params={<span class="tok-s">"q"</span>: q, <span class="tok-s">"limit"</span>: limit, <span class="tok-s">"offset"</span>: offset},
+                      timeout=<span class="tok-n">70</span>)
+            r.<span class="tok-b">raise_for_status</span>()
+            <span class="tok-k">return</span> r.<span class="tok-b">json</span>()
+        <span class="tok-k">except</span> requests.exceptions.RequestException:
+            <span class="tok-b">print</span>(<span class="tok-s">"cold start? retrying…"</span>)
+    <span class="tok-k">raise</span> RuntimeError(<span class="tok-s">"backend unreachable"</span>)
+
+<span class="tok-b">print</span>(<span class="tok-b">products</span>(limit=<span class="tok-n">5</span>)[<span class="tok-s">"total"</span>])
+
+<span class="tok-p"># 2 · create a product</span>
+r = s.<span class="tok-b">post</span>(<span class="tok-s">f"{API}/products"</span>, json={
+    <span class="tok-s">"slug"</span>: <span class="tok-s">"ceramic-mug"</span>, <span class="tok-s">"sku"</span>: <span class="tok-s">"cm0042"</span>,
+    <span class="tok-s">"name"</span>: <span class="tok-s">"Ceramic Mug"</span>, <span class="tok-s">"description"</span>: <span class="tok-s">"Matte 350ml mug"</span>,
+    <span class="tok-s">"price"</span>: <span class="tok-n">450</span>, <span class="tok-s">"currency"</span>: <span class="tok-s">"BDT"</span>,
+    <span class="tok-s">"stock"</span>: <span class="tok-n">60</span>, <span class="tok-s">"isActive"</span>: <span class="tok-k">True</span>,
+})`}
+      };
+      const m = map[lang] || map.curl;
+      document.getElementById('code').innerHTML = m.c;
+      document.getElementById('langFile').textContent = m.f;
+    }
+    function copyLang(b) { const tmp = document.createElement('div'); tmp.innerHTML = document.getElementById('code').innerHTML; copyText(tmp.textContent, b) }
+
+    /* ═══════ MARQUEE ═══════ */
+    (function () {
+      const it = ['GET /api/products/', 'POST /api/products/', 'GET /api/products/{slug}', 'PATCH /api/products/{id}', 'DELETE /api/products/{id}', 'DOCS /api/openapi', 'OPENAPI 3.1.2', 'ELYSIA · BUN · RENDER', 'CURRENCY BDT'];
+      const h = it.map(t => `<span class="flex items-center gap-7"><span>${t}</span><span class="w-1.5 h-1.5 rounded-full bg-[#FF6082] inline-block"></span></span>`).join('');
+      document.getElementById('mqA').innerHTML = h; document.getElementById('mqB').innerHTML = h;
+    })();
+
+    /* ═══════ CATALOG (live) ═══════ */
+    const SNAP = { items: [{ id: 'gvo1fsuumttlg06cgcsm356o', slug: 'waterpot', sku: 'wp324uiy3', name: 'Stainless Steel Waterpot', description: 'Durable stainless steel waterpot with a tight-fitting lid. Rust-resistant, easy to clean.', price: 850, currency: 'BDT', stock: 25, isActive: true, createdAt: '2026-10-29T06:06:25.965Z', updatedAt: '2026-10-29T06:06:25.965Z' }], total: 1, limit: '20', offset: 0 };
+    let catBusy = false;
+    function catRows(data, live) {
+      const rows = (data.items || []);
+      document.getElementById('catBody').innerHTML = rows.length ? rows.map(p => `
+    <tr class="row hover:bg-[#FFE4F6]/60">
+      <td class="px-5 py-3.5 fm text-[11px] text-black/40 max-w-[120px] truncate" title="${p.id}">${p.id}</td>
+      <td class="px-3 py-3.5"><button onclick="openDoc('${API_BASE}/products/${p.slug}')" class="fm text-[12px] font-bold text-[#705EFF] hover:underline">${p.slug}</button></td>
+      <td class="px-3 py-3.5 fm text-[11.5px] text-black/55">${p.sku}</td>
+      <td class="px-3 py-3.5"><div class="text-[13.5px] font-semibold leading-tight">${p.name}</div><div class="text-[11.5px] text-black/45 max-w-[320px] truncate">${p.description || ''}</div></td>
+      <td class="px-3 py-3.5 text-right fm text-[13px] font-bold">${Number(p.price ?? 0).toLocaleString()}<span class="text-[10px] text-black/40 ml-1">${p.currency || ''}</span></td>
+      <td class="px-3 py-3.5 text-center"><span class="fm text-[11px] font-bold rounded-full px-2.5 py-1 ${(p.stock ?? 0) > 20 ? 'bg-green-100 text-green-700' : (p.stock ?? 0) > 0 ? 'bg-[#FFF3D6] text-[#8a6a00]' : 'bg-[#FF6082] text-white'}">${p.stock ?? 0}</span></td>
+      <td class="px-3 py-3.5 text-center"><span class="inline-block w-6 h-6 rounded-full ${p.isActive ? 'bg-[#705EFF]' : 'bg-black/15'} relative"><span class="absolute top-0.5 ${p.isActive ? 'left-2.5' : 'left-0.5'} w-3 h-3 rounded-full bg-white"></span></span></td>
+      <td class="px-5 py-3.5 text-right whitespace-nowrap">
+        <button onclick="openDoc('${API_BASE}/products/${p.slug}')" class="fm text-[10.5px] font-bold border-2 border-[#1B1033] rounded-lg px-2 py-1 hover:bg-[#1B1033] hover:text-white transition-colors">by slug</button>
+        <button onclick="pgPrefill('${p.id}')" class="fm text-[10.5px] font-bold border-2 border-[#1B1033] rounded-lg px-2 py-1 hover:bg-[#705EFF] hover:text-white transition-colors" title="load id into playground">→ id</button>
+      </td>
+    </tr>`).join('')
+        : `<tr><td colspan="8" class="px-5 py-12 text-center"><div class="fm text-[13px] text-black/50">no products match that search${live ? '' : ' <span class="text-[#FF6082] font-bold">(cached snapshot only)</span>'}</div></td></tr>`;
+      document.getElementById('catFoot').innerHTML = `<span>${rows.length} row${rows.length === 1 ? '' : 's'} · total in db <b>${data.total ?? rows.length}</b> · limit ${data.limit ?? '—'} · offset ${data.offset ?? 0}</span>`;
+      window.__cat = data;
+      const c = document.getElementById('catMode');
+      c.innerHTML = live
+        ? `<span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span> live · fetched`
+        : `<span class="w-1.5 h-1.5 rounded-full bg-[#FFC86B]"></span> cached snapshot · service unreachable`;
+      document.getElementById('statCount').textContent = data.total ?? rows.length;
+    }
+    async function loadCatalog() {
+      if (catBusy) return; catBusy = true;
+      const q = (document.getElementById('catQ').value || '').trim();
+      const path = '/api/products/?limit=20&offset=0' + (q ? `&q=${encodeURIComponent(q)}` : '');
+      document.getElementById('catUrl').textContent = 'GET ' + ORIGIN + path;
+      document.getElementById('catMeta').textContent = 'loading…';
+      const r = await rawReq('GET', path, '');
+      document.getElementById('catMeta').textContent = r.live ? `${r.status} · ${r.ms}ms` : 'offline';
+      if (r.live && r.status === 200) { try { catRows(JSON.parse(r.text), true) } catch { catRows(SNAP, false) } }
+      else catRows(SNAP, false);
+      catBusy = false;
+    }
+    function pgPrefill(id) {
+      document.getElementById('pgP').value = '/api/products/' + id;
+      document.getElementById('pgM').value = 'PATCH';
+      pgSample('patch'); pgPreset();
+      document.getElementById('try').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      toast('Loaded id ' + id.slice(0, 12) + '… into playground');
+    }
+
+    /* ═══════ PLAYGROUND ═══════ */
+    const SAMPLES = { create: { slug: 'ceramic-mug', sku: 'cm0042', name: 'Ceramic Mug', description: 'Matte 350ml ceramic mug, dishwasher safe.', price: 450, currency: 'BDT', stock: 60, isActive: true }, patch: { price: 799, stock: 18, isActive: false } };
+    let lastResp = '';
+    function pgSample(k) { document.getElementById('pgB').value = JSON.stringify(SAMPLES[k], null, 2); }
+    function pgPreset() {
+      document.getElementById('pgO').textContent = ORIGIN;
+      const m = document.getElementById('pgM').value;
+      if (m !== 'GET' && !document.getElementById('pgB').value.trim()) pgSample(m === 'POST' ? 'create' : 'patch');
+    }
+    document.getElementById('pgM').addEventListener('change', () => {
+      const m = document.getElementById('pgM').value;
+      if (m === 'GET' || m === 'DELETE') document.getElementById('pgB').value = '';
+      else pgSample(m === 'POST' ? 'create' : 'patch');
+    });
+    async function pgSend() {
+      const m = document.getElementById('pgM').value;
+      let p = document.getElementById('pgP').value.trim().replace(' (POST create)', '').replace(' (PATCH/DELETE)', '').replace(' (expect 404)', '');
+      if (!p) p = '/api/products/';
+      if (!p.startsWith('/')) p = '/' + p;
+      if (p === '/api/products' && m === 'POST') p = '/api/products/';
+      const b = document.getElementById('pgB').value;
+      const S = document.getElementById('pgS'), R = document.getElementById('pgR'), MT = document.getElementById('pgMeta'), G = document.getElementById('pgGo');
+      S.textContent = '● pending'; S.style.cssText = 'font-family:JetBrains Mono,monospace;font-size:11px;font-weight:700;border-radius:999px;padding:4px 12px;background:#FFC86B33;color:#B5820B;border:1px solid #FFC86B88';
+      R.innerHTML = `<span class="text-white/40">// ${m} ${ORIGIN}${p}\n// awaiting… (cold start can take up to ~60s)</span>`;
+      G.disabled = true; G.classList.add('opacity-60');
+      const r = await rawReq(m, p, b);
+      const bytes = new Blob([r.text]).size;
+      lastResp = r.text;
+      S.textContent = `${r.status || (r.live ? 'ERR' : 'BLOCKED')} · ${r.live ? 'live' : 'offline'}`;
+      S.style.cssText = `font-family:JetBrains Mono,monospace;font-size:11px;font-weight:700;border-radius:999px;padding:4px 12px;${r.ok ? 'background:#22c55e22;color:#15803d;border:1px solid #22c55e66' : 'background:#FF608222;color:#FF6082;border:1px solid #FF608266'}`;
+      R.innerHTML = hl(r.text);
+      MT.textContent = `${r.ms} ms · ${bytes} bytes · ${r.live ? 'served by render' : 'could not reach service'}`;
+      G.disabled = false; G.classList.remove('opacity-60');
+    }
+    function copyResp() { copyText(lastResp || '(nothing yet)', null) }
+    const PRESETS = [
+      ['GET', '/api/products/?limit=5', '#705EFF'],
+      ['GET', '/api/products/waterpot', '#705EFF'],
+      ['GET', '/api/products?q=stainless', '#705EFF'],
+      ['GET', '/api/openapi/json', '#0EA5E9'],
+      ['POST', '/api/products/', '#FF6082'],
+      ['DELETE', '/api/products/REPLACE_WITH_ID', '#1B1033'],
+    ];
+    document.getElementById('presetBox').innerHTML = PRESETS.map(([m, p, c], i) => `
+  <button onclick="runPreset(${i})" class="group flex items-center gap-2.5 bg-[#FFF9FC] hover:bg-[#FFE4F6] border-2 border-[#1B1033]/10 hover:border-[#1B1033] rounded-xl px-3 py-2.5 text-left transition-all">
+    <span class="fm text-[10px] font-bold rounded px-1.5 py-0.5 text-white shrink-0" style="background:${c}">${m}</span>
+    <span class="fm text-[11.5px] font-bold truncate flex-1">${p}</span>
+    <i data-lucide="play" class="w-3.5 h-3.5 text-black/25 group-hover:text-[#FF6082] transition-colors shrink-0"></i>
+  </button>`).join('');
+    function runPreset(i) { const [m, p] = PRESETS[i]; document.getElementById('pgM').value = m; document.getElementById('pgP').value = p; if (m === 'POST') pgSample('create'); if (m === 'DELETE') document.getElementById('pgB').value = ''; pgSend(); document.getElementById('try').scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+
+    /* ═══════ ROUTE MAP ═══════ */
+    document.getElementById('routeMap').innerHTML = EP.slice(0, 5).map(e => `
+  <button onclick="pick(${EP.indexOf(e)});document.getElementById('endpoints').scrollIntoView({behavior:'smooth'})" class="flex items-center gap-3 bg-white/5 hover:bg-white/12 border border-white/10 rounded-xl px-3.5 py-2.5 text-left transition-colors">
+    <span class="fm text-[10px] font-bold rounded px-2 py-0.5 text-white shrink-0" style="${(MS[e.m] || '').replace(/background:/, 'background:')}">${e.m}</span>
+    <span class="font-bold truncate">${e.p}</span><i data-lucide="arrow-up-right" class="w-3.5 h-3.5 ml-auto text-white/25 shrink-0"></i>
+  </button>`).join('');
+
+    /* ═══════ PROBES + CHART ═══════ */
+    const samples = []; let chart = null, auto = true, aTimer = null;
+    function initChart() {
+      if (!window.Chart) return;
+      const ctx = document.getElementById('chart');
+      chart = new Chart(ctx, {
+        type: 'line',
+        data: { labels: [], datasets: [{ label: 'ms', data: [], borderColor: '#B26CFF', backgroundColor: 'rgba(112,94,255,0.22)', borderWidth: 2.5, fill: true, tension: .35, pointRadius: 3, pointBackgroundColor: '#B26CFF', pointBorderColor: '#1B1033', pointBorderWidth: 1.5 }] },
+        options: {
+          responsive: true, maintainAspectRatio: false, animation: { duration: 450 },
+          plugins: { legend: { display: false }, tooltip: { backgroundColor: '#FF6082', titleColor: '#fff', bodyColor: '#fff', borderColor: '#1B1033', borderWidth: 2, padding: 10, displayColors: false, callbacks: { title: i => i[0].label, label: c => c.parsed.y + ' ms' } } },
+          scales: {
+            x: { ticks: { color: 'rgba(255,255,255,.35)', font: { family: 'JetBrains Mono', size: 10 }, maxRotation: 0, autoSkip: true, maxTicksLimit: 6 }, grid: { color: 'rgba(255,255,255,.07)' } },
+            y: { beginAtZero: true, ticks: { color: 'rgba(255,255,255,.35)', font: { family: 'JetBrains Mono', size: 10 }, callback: v => v + 'ms' }, grid: { color: 'rgba(255,255,255,.07)' } }
+          }
+        }
+      });
+    }
+    function pushSample(ms, status) {
+      samples.push({ ms, status, t: new Date() }); if (samples.length > 30) samples.shift();
+      if (chart) {
+        chart.data.labels = samples.map(s => s.t.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+        chart.data.datasets[0].data = samples.map(s => s.ms);
+        chart.data.datasets[0].pointBackgroundColor = samples.map(s => s.status === 0 || s.ms > 8000 ? '#FF6082' : '#B26CFF');
+        chart.update('none');
+      }
+      const v = samples.map(s => s.ms).sort((a, b) => a - b);
+      document.getElementById('mMin').textContent = v[0] + 'ms';
+      document.getElementById('mMed').textContent = v[Math.floor(v.length / 2)] + 'ms';
+      document.getElementById('mMax').textContent = v[v.length - 1] + 'ms';
+      document.getElementById('uptimeChip').textContent = samples.length + ' samples';
+    }
+    async function probeAll(manual) {
+      const r = await rawReq('GET', '/api/products/?limit=1', '');
+      pushSample(r.ms, r.status);
+      const ok = r.live && r.status === 200;
+      const chip = document.getElementById('stChip'), txt = document.getElementById('stText');
+      txt.textContent = ok ? 'BACKEND ONLINE · 200 OK' : 'SERVICE SLEEPING / UNREACHABLE';
+      chip.className = 'flex items-center gap-2 shrink-0 ' + (ok ? 'text-[#8EE6A0]' : 'text-[#FF9DB2]');
+      chip.querySelector('span').className = 'w-2 h-2 rounded-full relative ring ' + (ok ? 'bg-green-400' : 'bg-[#FF6082]');
+      document.getElementById('stLat').textContent = 'latency ' + r.ms + 'ms';
+      document.getElementById('okChip').textContent = r.status ? r.status + ' · ' + r.ms + 'ms' : 'blocked';
+      document.getElementById('okChip').className = 'fm text-[10.5px] font-bold rounded-full px-2.5 py-0.5 ' + (ok ? 'bg-green-400/20 text-green-300' : 'bg-[#FF6082]/20 text-[#FF9DB2]');
+      document.getElementById('statLat').textContent = r.live ? Math.min(r.ms, 9999) : '—';
+      document.getElementById('footLat').textContent = 'latency ' + (r.live ? r.ms + 'ms' : 'blocked');
+      document.getElementById('footSt').innerHTML = `<span class="w-1.5 h-1.5 rounded-full ${ok ? 'bg-green-400 animate-pulse' : 'bg-[#FFC86B]'}"></span> ${ok ? 'online' : 'asleep'} · ${r.ms}ms`;
+      document.getElementById('lastProbe').innerHTML = `${new Date().toLocaleTimeString()} · <span class="text-white/60">${r.status || 'ERR'}</span> · ${r.ms}ms · ${r.live ? 'live' : 'no-cors'}`;
+      if (manual) toast(ok ? `200 OK · ${r.ms}ms` : `probe: ${r.status || 'blocked'} · ${r.ms}ms`);
+      if (r.live && r.status === 200) { try { const d = JSON.parse(r.text); document.getElementById('heroTotal').textContent = d.total ?? d.items.length; } catch (_) { } }
+      return r;
+    }
+    async function liveProbe(manual) {
+      const btn = document.getElementById('probeBtn'); btn.classList.add('spin');
+      const r = await rawReq('GET', '/api/products/?limit=1', '');
+      document.getElementById('heroMs').textContent = r.ms + 'ms';
+      document.getElementById('heroCmd').textContent = ORIGIN + '/api/products/?limit=1';
+      document.getElementById('heroOut').innerHTML = hl(r.text.slice(0, 1400)) + '<span class="blink text-[#B26CFF]">▊</span>';
+      if (r.live && r.status === 200) { try { const d = JSON.parse(r.text); document.getElementById('heroTotal').textContent = d.total ?? (d.items ? d.items.length : 0); } catch (_) { } }
+      btn.classList.remove('spin');
+      if (manual) pushSample(r.ms, r.status);
+    }
+    function toggleAuto(b) {
+      auto = !auto; clearTimeout(aTimer);
+      b.innerHTML = `<i data-lucide="${auto ? 'pause' : 'play'}" class="w-4 h-4"></i> <span>Auto: ${auto ? 'on' : 'off'}</span>`;
+      lucide.createIcons(); if (auto) loop(); else toast('Auto-probe paused');
+    }
+    function loop() { if (!auto) return; probeAll(false); aTimer = setTimeout(loop, 15000); }
+    async function wakeUp(btn) {
+      document.getElementById('wakeLog').innerHTML = '<span class="text-[#FFC86B]">waking… polling every 6s</span>';
+      for (let i = 1; i <= 6; i++) {
+        const r = await rawReq('GET', '/api/products/?limit=1', '');
+        document.getElementById('wakeLog').innerHTML = `try ${i}/6 · <b class="text-white">${r.status || 'blocked'}</b> · ${r.ms}ms`;
+        if (r.live && r.status === 200) { document.getElementById('wakeLog').innerHTML = `<span class="text-[#8EE6A0]">✓ warm after try ${i} · ${r.ms}ms</span>`; toast('Service is awake — ' + r.ms + 'ms'); liveProbe(false); loadCatalog(); return; }
+        if (i < 6) await new Promise(x => setTimeout(x, 6000));
+      }
+      document.getElementById('wakeLog').innerHTML = '<span class="text-[#FF9DB2]">still cold/blocked — open the URL in a new tab</span>';
+      toast('Still sleeping — the browser may also be blocked by CORS');
+    }
+
+    /* ═══════ MISC UI ═══════ */
+    document.getElementById('mobBtn').onclick = () => { const m = document.getElementById('mobMenu'); m.classList.toggle('hidden'); m.classList.toggle('flex'); };
+    document.querySelectorAll('#mobMenu a').forEach(a => a.onclick = () => { document.getElementById('mobMenu').classList.add('hidden'); document.getElementById('mobMenu').classList.remove('flex') });
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); io.unobserve(e.target); } }), { threshold: .1 });
+    document.querySelectorAll('.rv').forEach(el => io.observe(el));
+    document.getElementById('yr').textContent = new Date().getFullYear();
+    document.querySelectorAll('.originOut2').forEach(e => e.textContent = ORIGIN);
+    document.querySelectorAll('.originShort').forEach(e => e.textContent = ORIGIN.replace(/^https?:\/\//, ''));
+    document.getElementById('originOut').textContent = ORIGIN;
+    document.getElementById('pgO').textContent = ORIGIN;
+    document.getElementById('heroCmd').textContent = PING;
+    document.getElementById('catUrl').textContent = 'GET ' + PING;
+    window.addEventListener('resize', () => chart && chart.resize());
+
+    function copyWriteCurl(b) {
+      const cmd = 'curl -X POST ' + API_BASE + '/products -H "Content-Type: application/json" -d \'' + JSON.stringify(SAMPLES.create) + "'";
+      copyText(cmd, b);
+    }
+
+    /* ═══════ INIT ═══════ */
+    paintCode(); renderList(); pick(0); initChart();
+    lucide.createIcons();
+    catRows(SNAP, false);
+    liveProbe(false); probeAll(false); loadCatalog(); loop();
+  </script>
+</body>
+
+</html>
