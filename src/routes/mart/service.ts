@@ -91,7 +91,7 @@ export const mart = {
             throw e
         }
     },
-
+    //
     async UpdateMart(id: string, body: Partial<CreateMartBody>) {
         const [row] = await db
             .update(product)
