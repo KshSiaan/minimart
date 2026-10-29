@@ -65,8 +65,15 @@ export const mart = {
 
     async GetMart(slug: string) {
         const [row] = await db.select().from(product).where(eq(product.slug, slug))
-        if (!row) throw status(404, 'Product not found')
-        return row
+        if (!row) throw status(404, {
+            message: 'Product not found',
+            slug,
+            code: 404
+        })
+        return {
+            data: row,
+            message: `Product with slug ${slug} found`
+        }
     },
 
     async CreateMart(body: CreateMartBody) {
@@ -76,7 +83,10 @@ export const mart = {
         } catch (e: any) {
             // 23505 = unique_violation (slug or sku already exists)
             if ((e.cause?.code ?? e.code) === '23505') {
-                throw status(409, 'Slug or SKU already exists')
+                throw status(409, {
+                    message: 'Product with the same slug or SKU already exists',
+                    code: 409
+                })
             }
             throw e
         }
@@ -85,21 +95,27 @@ export const mart = {
     async UpdateMart(id: string, body: Partial<CreateMartBody>) {
         const [row] = await db
             .update(product)
-            .set(body) // updatedAt is handled by $onUpdate
+            .set(body)
             .where(eq(product.id, id))
             .returning()
-        if (!row) throw status(404, 'Product not found')
+        if (!row) throw status(404, {
+            message: 'Product not found',
+            id,
+            code: 404
+        })
         return row
     },
 
     async DeleteMart(id: string) {
-        // soft delete keeps order history intact
         const [row] = await db
-            .update(product)
-            .set({ isActive: false })
+            .delete(product)
             .where(eq(product.id, id))
             .returning()
-        if (!row) throw status(404, 'Product not found')
-        return { ...row, message: `Product with ID ${id} deleted` }
+        if (!row) throw status(404, {
+            message: 'Product not found',
+            id,
+            code: 404
+        })
+        return { data: row, message: `Product with ID ${id} deleted` }
     }
 }
