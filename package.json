@@ -3,13 +3,25 @@
   "version": "1.0.50",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run --watch src/index.ts"
+    "dev": "bun run --watch src/index.ts",
+    "start": "bun run src/index.ts"
   },
   "dependencies": {
-    "elysia": "latest"
+    "@elysia/cors": "^2.0.0-beta.2",
+    "@elysia/openapi": "^2.0.0-beta.6",
+    "@elysiajs/openapi": "^1.4.16",
+    "@neondatabase/serverless": "^1.2.0",
+    "@paralleldrive/cuid2": "^3.3.0",
+    "dotenv": "^18.0.9",
+    "drizzle-orm": "^1.0.0-rc.5",
+    "drizzle-typebox": "^0.3.3",
+    "elysia": "^2.0.0-beta.32",
+    "envalid": "^9.0.0"
   },
   "devDependencies": {
-    "bun-types": "latest"
+    "bun-types": "latest",
+    "drizzle-kit": "1.0.0-rc.5",
+    "tsx": "^4.23.15"
   },
   "module": "src/index.js"
 }
